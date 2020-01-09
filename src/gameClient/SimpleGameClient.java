@@ -1,5 +1,6 @@
 package gameClient;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -48,10 +49,15 @@ public class SimpleGameClient {
 			System.out.println(g);
 			// the list of fruits should be considered in your solution
 			Iterator<String> f_iter = game.getFruits().iterator();
-			while(f_iter.hasNext()) {System.out.println(f_iter.next());}	
+			while(f_iter.hasNext()) {
+				System.out.println(f_iter.next());}
 			int src_node = 0;  // arbitrary node, you should start at one of the fruits
 			for(int a = 0;a<rs;a++) {
 				game.addRobot(src_node+a);
+			}
+			Iterator<String> r_iter = game.getRobots().iterator();
+			while(r_iter.hasNext()) {
+				System.out.println(r_iter.next());
 			}
 		}
 		catch (JSONException e) {e.printStackTrace();}
