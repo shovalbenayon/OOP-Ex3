@@ -11,6 +11,8 @@ import utils.Point3D;
 public class Robot {
 
     private int id;
+    private int source;
+    private int destination;
     private Point3D pos;
     private double speed;
     private edge_data curr_edge;
@@ -25,6 +27,8 @@ public class Robot {
             this.id = robot.getInt("id");
             this.money = robot.getDouble("value");
             this.speed = robot.getDouble("speed");
+            this.source = robot.getInt("src");
+            this.destination = robot.getInt("dest");
             String []splits = robot.getString("pos").split(",");
             double x = Double.parseDouble(splits[0]);
             double y = Double.parseDouble(splits[1]);
@@ -62,6 +66,24 @@ public class Robot {
     public node_data getCurr_node() {
         return curr_node;
     }
+
+    public int getSource() {
+        return source;
+    }
+
+    public int getDestination() {
+        return destination;
+    }
+
+    public void setSource(int source) {
+        this.source = source;
+    }
+
+    public void setDestination(int destination) {
+        this.destination = destination;
+    }
+
+
 
 
 

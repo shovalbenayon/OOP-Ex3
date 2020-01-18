@@ -85,6 +85,8 @@ public class MyGameGUI extends JPanel {
             androidImage = ImageIO.read(android);
             File robot = new File("robot.png");
             robotImage = ImageIO.read(robot);
+            File background = new File("background.jpg");
+            backgroundImage = ImageIO.read(background);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -94,7 +96,7 @@ public class MyGameGUI extends JPanel {
     public void paint(Graphics g) {
         super.paint(g);
 
-        g.drawImage(backgroundImage, 5, 50, 1200, 500, null);
+        g.drawImage(backgroundImage, 5, 50, 1500, 900, null);
 
         Collection<node_data> nodesCol = gameGraph.getV();
         double minX = getMinX(nodesCol);
@@ -104,18 +106,16 @@ public class MyGameGUI extends JPanel {
 
         //drawing the nodes
         for (node_data node : nodesCol) {
-            Point3D nodeLocation = node.getLocation();
             g.setColor(Color.PINK);
             g.setFont(new Font("default", Font.BOLD, 15));
-            double scaledX = scale(nodeLocation.x(), minX, maxX, 100, (double)X_RANGE - 100);
-            double scaledY = scale(nodeLocation.y() ,minY, maxY, 100, (double)Y_RANGE - 100);
+            double scaledX = scale(node.getLocation().x(), minX, maxX, 100, (double)X_RANGE - 100);
+            double scaledY = scale(node.getLocation().y() ,minY, maxY, 100, (double)Y_RANGE - 100);
             g.fillOval((int)scaledX, (int)scaledY, 10, 10);
             g.drawString(String.valueOf(node.getKey()), (int)scaledX, (int)scaledY - 5);
 
             //drawing the edges
             Collection<edge_data> edgesCol = gameGraph.getE(node.getKey());
             for (edge_data edge : edgesCol) {
-                Point3D srcLocation = node.getLocation();
                 node_data dest = gameGraph.getNode(edge.getDest());
                 Point3D destLocation = dest.getLocation();
 
@@ -131,9 +131,8 @@ public class MyGameGUI extends JPanel {
         for (String tempFruit : fruitsList) {
             Fruit newFruit = new Fruit(tempFruit, gameGraph);
             this.FruitsCol.add(newFruit);
-            Point3D fruitLocation = newFruit.getPos();
-            double fruitX = fruitLocation.x();
-            double fruitY = fruitLocation.y();
+            double fruitX = newFruit.getPos().x();
+            double fruitY = newFruit.getPos().y();
             fruitX = scale(fruitX, minX, maxX, 100, X_RANGE - 100);
             fruitY = scale(fruitY, minY, maxY, 100, Y_RANGE - 100);
             if (newFruit.getType() == 1)
@@ -147,9 +146,8 @@ public class MyGameGUI extends JPanel {
         for (String tempRobot : robotsList) {
             Robot newRobot = new Robot(tempRobot);
             this.RobotCol.add(newRobot);
-            Point3D robotLocation = newRobot.getPos();
-            double robotX = robotLocation.x();
-            double robotY = robotLocation.y();
+            double robotX = newRobot.getPos().x();
+            double robotY = newRobot.getPos().y();
             robotX = scale(robotX, minX, maxX, 100, X_RANGE - 100);
             robotY = scale(robotY, minY, maxY, 100, Y_RANGE - 100);
             g.drawImage(robotImage, (int)robotX - 20, (int)robotY - 20, 40, 40, this);
@@ -360,7 +358,7 @@ public class MyGameGUI extends JPanel {
         autoChooseLocation = new Thread() {
             public void run() {
                 while (robotsCounter < robotsNum) {
-                    Fruit bestFruit = Automated.getBestFruit(FruitsCol, myGame);
+                    Fruit bestFruit = getBestFruit(FruitsCol);
 
                     // Choose the best location based on the greatest fruits values
                     int autoSrcNode;
@@ -370,7 +368,7 @@ public class MyGameGUI extends JPanel {
                         autoSrcNode = bestFruit.getEdge().getDest(); // android
                     myGame.addRobot(autoSrcNode);
 
-                    FruitsCol = Automated.removeBest(FruitsCol, myGame, bestFruit);
+                    FruitsCol = removeBest(FruitsCol, bestFruit);
                     repaint();
                     robotsCounter++;
                 }
@@ -388,29 +386,20 @@ public class MyGameGUI extends JPanel {
                     if (System.currentTimeMillis() - start > 20) {
                         try {
                             FruitsCol.clear();
-                            FruitsCol = Automated.getGameFruits(FruitsCol, gameGraph, myGame);
+                            FruitsCol = getGameFruits(FruitsCol, gameGraph, myGame);
                             getAutoGameScore = new JSONObject(myGame.toString());
                             JSONObject autoGameScore = getAutoGameScore.getJSONObject("GameServer");
                             gameScore = autoGameScore.getInt("grade");
 
                             for (String autoRobot : myGame.getRobots()) {
-                                JSONObject autoGameString = new JSONObject(autoRobot);
-                                JSONObject autoGameRobot = autoGameString.getJSONObject("Robot");
-                                int robotSN = autoGameRobot.getInt("id");
-                                int autoRobotSrc = autoGameRobot.getInt("src");
-                                int autoRobotDest = autoGameRobot.getInt("dest");
-
-                                if (autoRobotDest == -1) {
-                                    System.out.println("before" + FruitsCol.size());
-                                    autoRobotDest = Automated.getNext(FruitsCol, gameGraph, myGame, autoRobotSrc);
-                                    myGame.chooseNextEdge(robotSN, autoRobotDest);
-                                    System.out.println("after" + FruitsCol.size());
+                                Robot currentRobot = new Robot(autoRobot);
+                                if (currentRobot.getDestination() == -1) {
+                                    currentRobot.setDestination(getNext(FruitsCol, gameGraph, currentRobot.getSource())) ;
+                                    myGame.chooseNextEdge(currentRobot.getID(), currentRobot.getDestination());
                                 }
                             }
-
                             myGame.move();
                         } catch (Exception e) {
-                            System.out.println("Exception");
                         }
 
                         start = System.currentTimeMillis();
@@ -420,5 +409,75 @@ public class MyGameGUI extends JPanel {
             }
         };
 
+    }
+    public static ArrayList<Fruit> getGameFruits(ArrayList<Fruit> gameFruits, DGraph gameGraph, game_service myGame) {
+        List<String> fruitsList = myGame.getFruits();
+        for (String myFruit : fruitsList)
+            gameFruits.add(new Fruit(myFruit, gameGraph));
+
+        return gameFruits;
+    }
+
+    public static Fruit getBestFruit(ArrayList<Fruit> gameFruits) {
+        Fruit bestFruit = gameFruits.get(0);
+        for (Fruit myFruit : gameFruits)
+            if (myFruit.getValue() > bestFruit.getValue())
+                bestFruit = myFruit;
+
+        return bestFruit;
+    }
+
+    public static ArrayList<Fruit> removeBest(ArrayList<Fruit> gameFruits, Fruit delFruit) {
+        for (Fruit myFruit : gameFruits) {
+            if (delFruit.getValue() == myFruit.getValue()) {
+                gameFruits.remove(myFruit);
+                return gameFruits;
+            }
+        }
+        return gameFruits;
+    }
+
+    public static int getNext(ArrayList<Fruit> gameFruits, DGraph gameGraph, int srcNode) {
+        Graph_Algo myGraph = new Graph_Algo();
+        myGraph.init(gameGraph);
+        List<Integer> robotPath = new LinkedList<>();
+        robotPath.add(srcNode);
+        double maxProfit = 0;
+        int nextNode = srcNode;
+
+        for (Fruit myFruit : gameFruits) {
+            double rToFruitSrc = myGraph.shortestPathDist(srcNode, myFruit.getEdge().getSrc());
+            double rToFruitDest = myGraph.shortestPathDist(srcNode, myFruit.getEdge().getDest());
+
+            if (myFruit.getType() == -1) { // Banana
+                if (myGraph.shortestPathDist(srcNode, myFruit.getEdge().getDest()) == 0) {
+                    int ret = myFruit.getEdge().getSrc(); // Collect banana from destination to source
+                    gameFruits.remove(myFruit);
+                    return ret;
+                }
+
+                else if (myFruit.getValue() / rToFruitDest > maxProfit) {
+                    maxProfit = myFruit.getValue() / rToFruitDest;
+                    nextNode = myFruit.getEdge().getDest();
+                }
+            }
+
+            else if (myFruit.getType() == 1) { // Apple
+                if (myGraph.shortestPathDist(srcNode, myFruit.getEdge().getSrc()) == 0) {
+                    int ret2 = myFruit.getEdge().getDest();
+                    //return myFruit.getEdge().getDest(); // Collect apple from source to destination
+                    gameFruits.remove(myFruit);
+                    return ret2;
+                }
+                else if (myFruit.getValue() / rToFruitSrc > maxProfit) {
+                    maxProfit = myFruit.getValue() / rToFruitSrc;
+                    nextNode = myFruit.getEdge().getSrc();
+                }
+            }
+        }
+
+        robotPath.add(nextNode);
+        List<node_data> greedyPath = myGraph.TSP(robotPath);
+        return greedyPath.get(1).getKey();
     }
 }
