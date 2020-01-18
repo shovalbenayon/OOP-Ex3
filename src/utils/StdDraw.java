@@ -569,7 +569,7 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 	 */
 	public static final Color PRINCETON_ORANGE = new Color(245, 128, 37);
 
-	// default colors
+    // default colors
 	private static final Color DEFAULT_PEN_COLOR   = BLACK;
 	private static final Color DEFAULT_CLEAR_COLOR = WHITE;
 

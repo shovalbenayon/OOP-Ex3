@@ -233,5 +233,6 @@ public class Point3D implements Serializable
         _x = (center.x() +  radius * Math.cos(a+angle));
         _y = (center.y() +  radius * Math.sin(a+angle));
     }
+
 }
 

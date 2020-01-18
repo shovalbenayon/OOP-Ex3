@@ -1,6 +1,7 @@
 package dataStructure;
 
 
+import elements.Fruit;
 import oop_elements.OOP_NodeData;
 import oop_utils.OOP_Point3D;
 import org.json.JSONArray;
@@ -21,6 +22,7 @@ public class DGraph implements graph, Serializable {
 	private int MC;
 
 
+
 	public DGraph(DGraph g) {
 		this.Nodes_Map = g.Nodes_Map;
 		this.Edges_Map = g.Edges_Map;
@@ -31,10 +33,8 @@ public class DGraph implements graph, Serializable {
 
 	public DGraph(){ ;}
 
-	public void init(String jsonSTR) {
+	public DGraph(String jsonSTR) {
 		try {
-			OOP_NodeData.resetCount();
-
 			JSONObject graph = new JSONObject(jsonSTR);
 			JSONArray nodes = graph.getJSONArray("Nodes");
 			JSONArray edges = graph.getJSONArray("Edges");
@@ -44,8 +44,35 @@ public class DGraph implements graph, Serializable {
 			for(i = 0; i < nodes.length(); ++i) {
 				s = nodes.getJSONObject(i).getInt("id");
 				String pos = nodes.getJSONObject(i).getString("pos");
-				OOP_Point3D p = new OOP_Point3D(pos);
-				this.addNode((node_data) new OOP_NodeData(s, p));
+				Point3D p = new Point3D(pos);
+				this.addNode((node_data) new DataNode(s, p));
+			}
+
+			for(i = 0; i < edges.length(); ++i) {
+				s = edges.getJSONObject(i).getInt("src");
+				int d = edges.getJSONObject(i).getInt("dest");
+				double w = edges.getJSONObject(i).getDouble("w");
+				this.connect(s, d, w);
+			}
+		} catch (Exception var10) {
+			var10.printStackTrace();
+		}
+
+	}
+
+	public void init(String jsonSTR) {
+		try {
+			JSONObject graph = new JSONObject(jsonSTR);
+			JSONArray nodes = graph.getJSONArray("Nodes");
+			JSONArray edges = graph.getJSONArray("Edges");
+
+			int i;
+			int s;
+			for(i = 0; i < nodes.length(); ++i) {
+				s = nodes.getJSONObject(i).getInt("id");
+				String pos = nodes.getJSONObject(i).getString("pos");
+				Point3D p = new Point3D(pos);
+				this.addNode((node_data) new DataNode(s, p));
 			}
 
 			for(i = 0; i < edges.length(); ++i) {
@@ -217,7 +244,5 @@ public class DGraph implements graph, Serializable {
 	public int getMC() {
 		return MC;
 	}
-
-
 
 }
