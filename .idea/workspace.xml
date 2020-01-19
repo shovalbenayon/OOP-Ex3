@@ -29,7 +29,7 @@
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5" value="" />
     <property name="create.test.in.the.same.root" value="true" />
     <property name="findjar.last.used.dir" value="$PROJECT_DIR$" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/lib/JavaAPIforKml-2.2.1-javadoc.jar!/" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="Libraries" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.2" />
@@ -60,7 +60,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.AutomaticGameTest">
+  <component name="RunManager" selected="Application.main">
     <configuration name="Example2" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="gameClient.Example2" />
       <module name="Ex3_v2" />
@@ -155,8 +155,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.AutomaticGameTest" />
         <item itemvalue="Application.main" />
+        <item itemvalue="JUnit.AutomaticGameTest" />
         <item itemvalue="JUnit.KML_LoggerTest" />
         <item itemvalue="Application.SimpleGameClient" />
         <item itemvalue="Application.Example2" />

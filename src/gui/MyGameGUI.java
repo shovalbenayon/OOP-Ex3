@@ -418,7 +418,7 @@ public class MyGameGUI extends JPanel {
             JSONObject getAutoGameScore;
             long start = System.currentTimeMillis();
             MovesCounter = 0;
-            while (myGame.isRunning()) {
+            while (myGame.timeToEnd() > 100) {
                 if (System.currentTimeMillis() - start > 20) {
                     try {
                         //To find always the best fruit after eating one
