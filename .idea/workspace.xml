@@ -11,6 +11,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="JUnit5 Test Class" />
         <option value="Class" />
       </list>
     </option>
@@ -24,8 +25,28 @@
     <property name="Repository.Attach.Annotations" value="false" />
     <property name="Repository.Attach.JavaDocs" value="false" />
     <property name="Repository.Attach.Sources" value="false" />
+    <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="JUnit5" />
+    <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5" value="" />
+    <property name="create.test.in.the.same.root" value="true" />
     <property name="findjar.last.used.dir" value="$PROJECT_DIR$" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/lib/JavaAPIforKml-2.2.1-javadoc.jar!/" />
+    <property name="project.structure.last.edited" value="Libraries" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.2" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CreateTestDialog.RecentsKey">
+      <recent name="Tests" />
+    </key>
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\shova\IdeaProjects\Ex3_OOP" />
+      <recent name="C:\Users\shova\IdeaProjects\Ex3_OOP\src\utils" />
+      <recent name="C:\Users\shova\IdeaProjects\Ex3_OOP\src" />
+      <recent name="C:\Users\shova\IdeaProjects\Ex3_OOP\lib" />
+    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -40,8 +61,21 @@
     </option>
   </component>
   <component name="RunManager" selected="Application.main">
-    <configuration name="MyGameGUI" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="gameClient.MyGameGUI" />
+    <configuration name="Example1" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="gameClient.Example1" />
+      <module name="Ex3_v2" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="gameClient.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Example2" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="gameClient.Example2" />
       <module name="Ex3_v2" />
       <extension name="coverage">
         <pattern>
@@ -66,32 +100,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="g" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="gameClient.g" />
-      <module name="Ex3_v2" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="gameClient.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="main (1)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="Tests.main" />
-      <module name="Ex3_v2" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="Tests.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="gameClient.main" />
       <module name="Ex3_v2" />
@@ -105,13 +113,51 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="KML_LoggerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Ex3_v2" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Tests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="Tests" />
+      <option name="MAIN_CLASS_NAME" value="Tests.KML_LoggerTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="JavaAPIforKml-2.2.1-javadoc.jar (1)" type="JarApplication">
+      <option name="JAR_PATH" value="$PROJECT_DIR$/src/JavaAPIforKml-2.2.1-javadoc.jar" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="ALTERNATIVE_JRE_PATH" value="C:\Program Files\Java\jdk1.8.0_181\jre" />
+      <method v="2" />
+    </configuration>
+    <configuration name="JavaAPIforKml-2.2.1-javadoc.jar (2)" type="JarApplication">
+      <option name="JAR_PATH" value="$PROJECT_DIR$/JavaAPIforKml-2.2.1-javadoc.jar" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="ALTERNATIVE_JRE_PATH" value="C:\Program Files\Java\jdk1.8.0_181\jre" />
+      <method v="2" />
+    </configuration>
+    <configuration name="JavaAPIforKml-2.2.1-javadoc.jar" type="JarApplication">
+      <option name="JAR_PATH" value="$PROJECT_DIR$/lib/JavaAPIforKml-2.2.1-javadoc.jar" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <method v="2" />
+    </configuration>
+    <configuration name="javaapiforkml-2.2.0.jar" type="JarApplication">
+      <option name="JAR_PATH" value="$PROJECT_DIR$/javaapiforkml-2.2.0.jar" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="ALTERNATIVE_JRE_PATH" value="C:\Program Files\Java\jdk1.8.0_181\jre" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Application.main" />
+        <item itemvalue="JUnit.KML_LoggerTest" />
         <item itemvalue="Application.SimpleGameClient" />
-        <item itemvalue="Application.g" />
-        <item itemvalue="Application.MyGameGUI" />
-        <item itemvalue="Application.main (1)" />
+        <item itemvalue="Application.Example2" />
+        <item itemvalue="Application.Example1" />
       </list>
     </recent_temporary>
   </component>
@@ -140,16 +186,5 @@
         </entry>
       </map>
     </option>
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/gameClient/main.java</url>
-          <line>7</line>
-          <option name="timeStamp" value="6" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

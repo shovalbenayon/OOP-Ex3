@@ -59,5 +59,11 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="JavaAPIforKml-2.2.1-javadoc" level="project" />
+    <orderEntry type="library" name="javaapiforkml-2.2.0" level="project" />
+    <orderEntry type="library" name="JavaAPIforKml-2.2.1-javadoc (2)" level="project" />
+    <orderEntry type="library" name="JavaAPIforKml-2.2.1-javadoc  (2)" level="project" />
+    <orderEntry type="library" name="JavaAPIforKml-2.2.1-javadoc (3)" level="project" />
+    <orderEntry type="library" name="JavaAPIforKml-2.2.1-javadoc (4)" level="project" />
   </component>
 </module>
