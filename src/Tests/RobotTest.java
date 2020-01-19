@@ -41,21 +41,6 @@ class RobotTest {
         }
     }
 
-    @Test
-    void getCurr_edge() {
-        for (Robot r:
-                robots_col) {
-            r.getCurr_edge();
-        }
-    }
-
-    @Test
-    void getCurr_node() {
-        for (Robot r:
-                robots_col) {
-            r.getId();
-        }
-    }
 
     @Test
     void getSource() {

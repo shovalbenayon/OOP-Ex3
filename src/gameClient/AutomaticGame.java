@@ -16,23 +16,20 @@ public class AutomaticGame {
      * @param fruitsCol - the array in the beginning - empty array
      * @param dGraph - the dgraph og the game
      * @param Game - the game
-     * @return - the new array after update and contain all the fruits
      */
-    public static ArrayList<Fruit> getGameFruits(ArrayList<Fruit> fruitsCol, DGraph dGraph, game_service Game) {
+    public static void getGameFruits(ArrayList<Fruit> fruitsCol, DGraph dGraph, game_service Game) {
         List<String> fruitsList = Game.getFruits();
         for (String myFruit : fruitsList)
             fruitsCol.add(new Fruit(myFruit, dGraph));
 
-        return fruitsCol;
     }
 
     /**
      *Finding the Most valuable fruit
      * @param fruitsCol - fruits collection
-     * @param Game - the game
      * @return the Most valuable fruit
      */
-    public static Fruit getBestFruit(ArrayList<Fruit> fruitsCol, game_service Game) {
+    public static Fruit getBestFruit(ArrayList<Fruit> fruitsCol) {
         Fruit bestFruit = fruitsCol.get(0);
         for (Fruit myFruit : fruitsCol)
             if (myFruit.getValue() > bestFruit.getValue())
@@ -44,30 +41,26 @@ public class AutomaticGame {
     /**
      * This metod remove the fruit from the collection
      * @param fruitsCol - fruits
-     * @param Game - the game
      * @param fruit - the fruit to delete
-     * @return
      */
-    public static ArrayList<Fruit> removeBest(ArrayList<Fruit> fruitsCol, game_service Game, Fruit fruit) {
+    public static void removeBest(ArrayList<Fruit> fruitsCol, Fruit fruit) {
         for (Fruit myFruit : fruitsCol) {
             if (fruit.getValue() == myFruit.getValue()) {
                 fruitsCol.remove(myFruit);
-                return fruitsCol;
+                return;
             }
         }
-        return fruitsCol;
     }
 
 
     /**
      * finding the next node to go
-     * @param fruitsCol
-     * @param dGraph
-     * @param Game
-     * @param source
-     * @return
+     * @param fruitsCol - fruits collection
+     * @param dGraph - the dgraph of the game
+     * @param source - the source id node
+     * @return - the src id node to go
      */
-    public static int getNext(ArrayList<Fruit> fruitsCol, DGraph dGraph, game_service Game, int source) {
+    public static int getNext(ArrayList<Fruit> fruitsCol, DGraph dGraph, int source) {
         Graph_Algo myGraph = new Graph_Algo();
         myGraph.init(dGraph);
         List<Integer> robotPath = new LinkedList<>();

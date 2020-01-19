@@ -1,7 +1,5 @@
 package gui;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -9,8 +7,6 @@ import java.util.*;
 import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.*;
-
-import com.sun.org.apache.xml.internal.security.Init;
 import elements.Fruit;
 import elements.Robot;
 import gameClient.AutomaticGame;
@@ -60,7 +56,7 @@ public class MyGameGUI extends JPanel {
     private KML_Logger log;
 
 
-    public void InitGui() {
+    private void InitGui() {
         JFrame Frame = new JFrame("Game");
         Frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Frame.add(this);
@@ -69,17 +65,23 @@ public class MyGameGUI extends JPanel {
         Frame.setLocationRelativeTo(null); // puts the frame in the middle of the screem
     }
 
-    public MyGameGUI() throws IOException {
+    public MyGameGUI()  {
         File r = new File("robot.png");
-        Image robo = ImageIO.read(r);
-        Image newimg = robo.getScaledInstance(130, 150,  java.awt.Image.SCALE_SMOOTH);
-        ImageIcon icon = new ImageIcon(newimg);
-        // Set the game Level - [0,23]
-        String[] options = {"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24"};
-        int gameNum = JOptionPane.showOptionDialog(null, "Choose the Level you would like to play", "Click a button",
-                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, icon, options, options[0]);
-        if (gameNum<0) gameNum=0;
-        this.gameNumber = gameNum;
+        try {
+            Image robo = ImageIO.read(r);
+            Image newimg = robo.getScaledInstance(130, 150,  Image.SCALE_SMOOTH);
+            ImageIcon icon = new ImageIcon(newimg);
+            // Set the game Level - [0,23]
+            String[] options = {"0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23"};
+            int gameNum = JOptionPane.showOptionDialog(null, "Choose the Level you would like to play", "Click a button",
+                    JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, icon, options, options[0]);
+            this.gameNumber = gameNum;
+            if (gameNum == JOptionPane.CLOSED_OPTION){
+                System.exit(0);
+            }
+        } catch (IOException | HeadlessException e) {
+            e.printStackTrace();
+        }
         log = new KML_Logger(""+gameNumber);
         JPanel mainPanel = new JPanel();
         mainPanel.setPreferredSize(new Dimension(X_RANGE, Y_RANGE));
@@ -374,16 +376,24 @@ public class MyGameGUI extends JPanel {
             Image b = byeImage;
             Image newb = b.getScaledInstance(130, 150,  java.awt.Image.SCALE_SMOOTH);
             ImageIcon by = new ImageIcon(newb);
-            JOptionPane.showMessageDialog(this, "Game Over!\n Final Score : " + this.gameScore +" in " + this.MovesCounter + " Moves ", "Close" , JOptionPane.ERROR_MESSAGE, by );
-            this.setVisible(false);
-            System.exit(0);
+            JOptionPane.showMessageDialog(this, "Game Over!\n In stage "+ this.gameNumber+" The Final Score : " + this.gameScore +" in " + this.MovesCounter + " Moves ", "Close" , JOptionPane.ERROR_MESSAGE, by );
+            int n = JOptionPane.showConfirmDialog(this , "Export to KML ?" , "Export" , JOptionPane.YES_NO_OPTION);
+            if (n == JOptionPane.YES_OPTION){
+                log.closeDocument();
+                this.setVisible(false);
+                System.exit(0);
+            }
+            else {
+                this.setVisible(false);
+                System.exit(0);
+            }
         });
 
         // Automatic game threads
         placeRobotsAuto = new Thread(() -> {
             while (robotsCounter < robotsNum) {
                 //gets the most valuable fruit
-                Fruit bestFruit = AutomaticGame.getBestFruit(FruitsCol, myGame);
+                Fruit bestFruit = AutomaticGame.getBestFruit(FruitsCol);
                 // Choose the best location based on the greatest fruits values
                 int autoSrcNode;
                 //If the direction is from lower id node to higher id node so place the robot in the source so the robot can eat the fruit
@@ -395,7 +405,7 @@ public class MyGameGUI extends JPanel {
                     autoSrcNode = bestFruit.getEdge().getDest(); // android
                 myGame.addRobot(autoSrcNode);
 
-                AutomaticGame.removeBest(FruitsCol,myGame, bestFruit);
+                AutomaticGame.removeBest(FruitsCol, bestFruit);
                 repaint();
                 robotsCounter++;
             }
@@ -422,7 +432,7 @@ public class MyGameGUI extends JPanel {
                             Robot currentRobot = new Robot(autoRobot);
                             //If the robot do not have destination , he will go to the best node to collect a fruit
                             if (currentRobot.getDestination() == -1) {
-                                currentRobot.setDestination(AutomaticGame.getNext(FruitsCol, dGraph,myGame, currentRobot.getSource()));
+                                currentRobot.setDestination(AutomaticGame.getNext(FruitsCol, dGraph, currentRobot.getSource()));
                                 myGame.chooseNextEdge(currentRobot.getID(), currentRobot.getDestination());
                                 MovesCounter++;
                             }
@@ -438,7 +448,7 @@ public class MyGameGUI extends JPanel {
             Image b = byeImage;
             Image newb = b.getScaledInstance(130, 150,  java.awt.Image.SCALE_SMOOTH);
             ImageIcon by = new ImageIcon(newb);
-            JOptionPane.showMessageDialog(this, "Game Over!\n Final Score : " + this.gameScore +" in " + this.MovesCounter + " Moves ", "Close" , JOptionPane.ERROR_MESSAGE, by );
+            JOptionPane.showMessageDialog(this, "Game Over!\n In stage "+ this.gameNumber+ " The Final Score : " + this.gameScore +" in " + this.MovesCounter + " Moves ", "Close" , JOptionPane.ERROR_MESSAGE, by );
             int n = JOptionPane.showConfirmDialog(this , "Export to KML ?" , "Export" , JOptionPane.YES_NO_OPTION);
             if (n == JOptionPane.YES_OPTION){
                 log.closeDocument();

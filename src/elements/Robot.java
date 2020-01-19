@@ -15,9 +15,6 @@ public class Robot {
     private int destination;
     private Point3D pos;
     private double speed;
-    private edge_data curr_edge;
-    private node_data curr_node;
-    private double money;
 
     public Robot(String s) {
         JSONObject jsonRobot ;
@@ -25,7 +22,6 @@ public class Robot {
             jsonRobot = new JSONObject(s);
             JSONObject robot = jsonRobot.getJSONObject("Robot");
             this.id = robot.getInt("id");
-            this.money = robot.getDouble("value");
             this.speed = robot.getDouble("speed");
             this.source = robot.getInt("src");
             this.destination = robot.getInt("dest");
@@ -43,10 +39,7 @@ public class Robot {
     }
 
     public Robot() {
-        this.money = 0;
         this.id = 0;
-        this.curr_node = null;
-        this.curr_edge = null;
         this.speed = 0;
         this.pos = null;
     }
@@ -58,14 +51,6 @@ public class Robot {
     }
 
     public Point3D getPos() { return pos; }
-
-    public edge_data getCurr_edge() {
-        return curr_edge;
-    }
-
-    public node_data getCurr_node() {
-        return curr_node;
-    }
 
     public int getSource() {
         return source;

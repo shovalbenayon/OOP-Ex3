@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 public class KML_Logger {
     private String name;
     private StringBuilder content;
-
     private static final String NodeStyle = "node";
     private static final String AndroidStyle = "fruit-android";
     private static final String AppleStyle = "fruit-apple";
@@ -21,7 +20,7 @@ public class KML_Logger {
         content.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n");
         content.append("<kml xmlns=\"http://earth.google.com/kml/2.2\">\r\n");
         content.append("  <Document>\r\n");
-        content.append("    <name>stage: " + name + " The maze of waze" + "</name>\r\n");
+        content.append("    <name>stage: ").append(name).append(" The maze of waze").append("</name>\r\n");
         content.append("	 <Style id=\"" + NodeStyle + "\">\r\n");
         content.append("      <IconStyle>\r\n");
         content.append("        <Icon>\r\n");
@@ -61,11 +60,11 @@ public class KML_Logger {
         LocalDateTime now = LocalDateTime.now();
         content.append("    <Placemark>\r\n");
         content.append("      <TimeStamp>\r\n");
-        content.append("        <when>" + now + "</when>\r\n");
+        content.append("        <when>").append(now).append("</when>\r\n");
         content.append("      </TimeStamp>\r\n");
-        content.append("      <styleUrl>#" + type + "</styleUrl>\r\n");
+        content.append("      <styleUrl>#").append(type).append("</styleUrl>\r\n");
         content.append("      <Point>\r\n");
-        content.append("        <coordinates>" + pos + "</coordinates>\r\n");
+        content.append("        <coordinates>").append(pos).append("</coordinates>\r\n");
         content.append("      </Point>\r\n");
         content.append("    </Placemark>\r\n");
 
@@ -92,7 +91,6 @@ public class KML_Logger {
             pw.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            return;
         }
     }
 
