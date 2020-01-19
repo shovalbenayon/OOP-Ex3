@@ -26,7 +26,7 @@ The main goal of the project is to -
 
 <img width="168" alt="ביאור 2020-01-19 174731" src="https://user-images.githubusercontent.com/57687222/72683961-1310a080-3ae5-11ea-9b8b-24d503d17ac7.png">
 
-6. In automaic level, you can export the info to KML file and open it on GoogleEarth
+6. At the end of the level, you can export the info to KML file and open it on GoogleEarth
 
 <img width="130" alt="ביאור 2020-01-19 174759" src="https://user-images.githubusercontent.com/57687222/72683975-3dfaf480-3ae5-11ea-807a-8500683a2dcd.png">
 
