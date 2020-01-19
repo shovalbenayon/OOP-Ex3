@@ -10,50 +10,79 @@ import elements.Fruit;
 
 
 public class AutomaticGame {
-    public static ArrayList<Fruit> getGameFruits(ArrayList<Fruit> gameFruits, DGraph gameGraph, game_service myGame) {
-        List<String> fruitsList = myGame.getFruits();
-        for (String myFruit : fruitsList)
-            gameFruits.add(new Fruit(myFruit, gameGraph));
 
-        return gameFruits;
+    /**
+     * finds game fruits
+     * @param fruitsCol - the array in the beginning - empty array
+     * @param dGraph - the dgraph og the game
+     * @param Game - the game
+     * @return - the new array after update and contain all the fruits
+     */
+    public static ArrayList<Fruit> getGameFruits(ArrayList<Fruit> fruitsCol, DGraph dGraph, game_service Game) {
+        List<String> fruitsList = Game.getFruits();
+        for (String myFruit : fruitsList)
+            fruitsCol.add(new Fruit(myFruit, dGraph));
+
+        return fruitsCol;
     }
 
-    public static Fruit getBestFruit(ArrayList<Fruit> gameFruits, game_service myGame) {
-        Fruit bestFruit = gameFruits.get(0);
-        for (Fruit myFruit : gameFruits)
+    /**
+     *Finding the Most valuable fruit
+     * @param fruitsCol - fruits collection
+     * @param Game - the game
+     * @return the Most valuable fruit
+     */
+    public static Fruit getBestFruit(ArrayList<Fruit> fruitsCol, game_service Game) {
+        Fruit bestFruit = fruitsCol.get(0);
+        for (Fruit myFruit : fruitsCol)
             if (myFruit.getValue() > bestFruit.getValue())
                 bestFruit = myFruit;
 
         return bestFruit;
     }
 
-    public static ArrayList<Fruit> removeBest(ArrayList<Fruit> gameFruits, game_service myGame, Fruit delFruit) {
-        for (Fruit myFruit : gameFruits) {
-            if (delFruit.getValue() == myFruit.getValue()) {
-                gameFruits.remove(myFruit);
-                return gameFruits;
+    /**
+     * This metod remove the fruit from the collection
+     * @param fruitsCol - fruits
+     * @param Game - the game
+     * @param fruit - the fruit to delete
+     * @return
+     */
+    public static ArrayList<Fruit> removeBest(ArrayList<Fruit> fruitsCol, game_service Game, Fruit fruit) {
+        for (Fruit myFruit : fruitsCol) {
+            if (fruit.getValue() == myFruit.getValue()) {
+                fruitsCol.remove(myFruit);
+                return fruitsCol;
             }
         }
-        return gameFruits;
+        return fruitsCol;
     }
 
 
-    public static int getNext(ArrayList<Fruit> gameFruits, DGraph gameGraph, game_service myGame, int srcNode) {
+    /**
+     * finding the next node to go
+     * @param fruitsCol
+     * @param dGraph
+     * @param Game
+     * @param source
+     * @return
+     */
+    public static int getNext(ArrayList<Fruit> fruitsCol, DGraph dGraph, game_service Game, int source) {
         Graph_Algo myGraph = new Graph_Algo();
-        myGraph.init(gameGraph);
+        myGraph.init(dGraph);
         List<Integer> robotPath = new LinkedList<>();
-        robotPath.add(srcNode);
+        robotPath.add(source);
         double maxProfit = 0;
-        int nextNode = srcNode;
+        int nextNode = source;
 
-        for (Fruit myFruit : gameFruits) {
-            double rToFruitSrc = myGraph.shortestPathDist(srcNode, myFruit.getEdge().getSrc());
-            double rToFruitDest = myGraph.shortestPathDist(srcNode, myFruit.getEdge().getDest());
+        for (Fruit myFruit : fruitsCol) {
+            double rToFruitSrc = myGraph.shortestPathDist(source, myFruit.getEdge().getSrc());
+            double rToFruitDest = myGraph.shortestPathDist(source, myFruit.getEdge().getDest());
 
             if (myFruit.getType() == -1) { // Android
-                if (myGraph.shortestPathDist(srcNode, myFruit.getEdge().getDest()) == 0) {
+                if (myGraph.shortestPathDist(source, myFruit.getEdge().getDest()) == 0) {
                     int ret = myFruit.getEdge().getSrc(); // Collect android from destination to source
-                    gameFruits.remove(myFruit);
+                    fruitsCol.remove(myFruit);
                     return ret;
                 }
 
@@ -64,9 +93,9 @@ public class AutomaticGame {
             }
 
             else if (myFruit.getType() == 1) { // Apple
-                if (myGraph.shortestPathDist(srcNode, myFruit.getEdge().getSrc()) == 0) {
+                if (myGraph.shortestPathDist(source, myFruit.getEdge().getSrc()) == 0) {
                     int ret2 = myFruit.getEdge().getDest();
-                    gameFruits.remove(myFruit);
+                    fruitsCol.remove(myFruit);
                     return ret2;
                 }
                 else if (myFruit.getValue() / rToFruitSrc > maxProfit) {

@@ -1,4 +1,4 @@
-package gameClient;
+package gui;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,8 +9,11 @@ import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
+import com.sun.org.apache.xml.internal.security.Init;
 import elements.Fruit;
 import elements.Robot;
+import gameClient.AutomaticGame;
+import gameClient.KML_Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,9 +59,10 @@ public class MyGameGUI extends JPanel {
 
 
     public void InitGui() {
+
         JFrame Frame = new JFrame("Game");
         Frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        Frame.add(new MyGameGUI(this.gameNumber));
+        Frame.add(this);
         Frame.pack();
         Frame.setVisible(true);
         Frame.setLocationRelativeTo(null); // puts the frame in the middle of the screem
@@ -104,6 +108,7 @@ public class MyGameGUI extends JPanel {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        InitGui();
 
     }
 
@@ -392,7 +397,7 @@ public class MyGameGUI extends JPanel {
                         JSONObject autoGameScore = getAutoGameScore.getJSONObject("GameServer");
                         gameScore = autoGameScore.getInt("grade");
 
-                        for (String autoRobot : myGame.getRobots()) {
+                        for  (String autoRobot : myGame.getRobots()) {
                             Robot currentRobot = new Robot(autoRobot);
                             //If the robot do not have destination , he will go to the best node to collect a fruit
                             if (currentRobot.getDestination() == -1) {

@@ -1,9 +1,7 @@
 package gameClient;
 
 
-import Server.Game_Server;
-import dataStructure.DGraph;
-import dataStructure.graph;
+import gui.MyGameGUI;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -24,11 +22,6 @@ public class main {
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, icon, options, options[0]);
         if (gameNum<0) gameNum=0;
         MyGameGUI games = new MyGameGUI(gameNum);
-        games.InitGui();
-//        temp g = new temp(23);
-//        g.createJFrame();
-
-
 
     }
 
