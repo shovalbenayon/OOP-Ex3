@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.List;
 import javax.imageio.ImageIO;
@@ -51,6 +52,7 @@ public class MyGameGUI extends JPanel {
     private int robotsNum = 0;
     private int robotsCounter = 0;
     private int gameScore = 0;
+    private int MovesCounter = 0;
 
     // Game mode flags
     private boolean autoGame = false;
@@ -59,7 +61,6 @@ public class MyGameGUI extends JPanel {
 
 
     public void InitGui() {
-
         JFrame Frame = new JFrame("Game");
         Frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Frame.add(this);
@@ -68,8 +69,17 @@ public class MyGameGUI extends JPanel {
         Frame.setLocationRelativeTo(null); // puts the frame in the middle of the screem
     }
 
-    public MyGameGUI(int gameNumber) {
-        this.gameNumber = gameNumber;
+    public MyGameGUI() throws IOException {
+        File r = new File("robot.png");
+        Image robo = ImageIO.read(r);
+        Image newimg = robo.getScaledInstance(130, 150,  java.awt.Image.SCALE_SMOOTH);
+        ImageIcon icon = new ImageIcon(newimg);
+        // Set the game Level - [0,23]
+        String[] options = {"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24"};
+        int gameNum = JOptionPane.showOptionDialog(null, "Choose the Level you would like to play", "Click a button",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, icon, options, options[0]);
+        if (gameNum<0) gameNum=0;
+        this.gameNumber = gameNum;
         log = new KML_Logger(""+gameNumber);
         JPanel mainPanel = new JPanel();
         mainPanel.setPreferredSize(new Dimension(X_RANGE, Y_RANGE));
@@ -178,7 +188,9 @@ public class MyGameGUI extends JPanel {
         g.setColor(Color.BLACK);
         long timeToEnd = myGame.timeToEnd() / 1000;
         if (timeToEnd < 10) g.setColor(Color.RED);
-        if (timeToEnd < 1) g.drawString("GAME OVER", X_RANGE - 100, 20);
+        if (timeToEnd < 1) {
+            g.drawString("GAME OVER", X_RANGE - 100, 20);
+        }
         else g.drawString("Remaining time : " +timeToEnd, X_RANGE - 150, 20);
 
         // Total score drawl
@@ -221,6 +233,7 @@ public class MyGameGUI extends JPanel {
                                 int destinationNode = Integer.parseInt(destNode);
                                 if (dGraph.getNode(destinationNode) == null) throw new RuntimeException();
                                 myGame.chooseNextEdge(Integer.parseInt(idRobot), destinationNode);
+                                MovesCounter++;
                             } catch (Exception Ex) {
                                 JOptionPane.showMessageDialog(null, "Invalid input", "Error", JOptionPane.ERROR_MESSAGE);
                             }
@@ -342,6 +355,7 @@ public class MyGameGUI extends JPanel {
         MoveRobotManual = new Thread(() -> {
             JSONObject getscore;
             long start = System.currentTimeMillis();
+            MovesCounter = 0;
             while (myGame.isRunning()) {
                 if (System.currentTimeMillis() - start > 20) {
                     try {
@@ -357,6 +371,12 @@ public class MyGameGUI extends JPanel {
                     repaint();
                 }
             }
+            Image b = byeImage;
+            Image newb = b.getScaledInstance(130, 150,  java.awt.Image.SCALE_SMOOTH);
+            ImageIcon by = new ImageIcon(newb);
+            JOptionPane.showMessageDialog(this, "Game Over!\n Final Score : " + this.gameScore +" in " + this.MovesCounter + " Moves ", "Close" , JOptionPane.ERROR_MESSAGE, by );
+            this.setVisible(false);
+            System.exit(0);
         });
 
         // Automatic game threads
@@ -387,6 +407,7 @@ public class MyGameGUI extends JPanel {
         moveRobotAuto = new Thread(() -> {
             JSONObject getAutoGameScore;
             long start = System.currentTimeMillis();
+            MovesCounter = 0;
             while (myGame.isRunning()) {
                 if (System.currentTimeMillis() - start > 20) {
                     try {
@@ -403,6 +424,7 @@ public class MyGameGUI extends JPanel {
                             if (currentRobot.getDestination() == -1) {
                                 currentRobot.setDestination(AutomaticGame.getNext(FruitsCol, dGraph,myGame, currentRobot.getSource()));
                                 myGame.chooseNextEdge(currentRobot.getID(), currentRobot.getDestination());
+                                MovesCounter++;
                             }
                         }
                         myGame.move();
@@ -413,7 +435,21 @@ public class MyGameGUI extends JPanel {
                     repaint();
                 }
             }
-            log.closeDocument();
+            Image b = byeImage;
+            Image newb = b.getScaledInstance(130, 150,  java.awt.Image.SCALE_SMOOTH);
+            ImageIcon by = new ImageIcon(newb);
+            JOptionPane.showMessageDialog(this, "Game Over!\n Final Score : " + this.gameScore +" in " + this.MovesCounter + " Moves ", "Close" , JOptionPane.ERROR_MESSAGE, by );
+            int n = JOptionPane.showConfirmDialog(this , "Export to KML ?" , "Export" , JOptionPane.YES_NO_OPTION);
+            if (n == JOptionPane.YES_OPTION){
+                log.closeDocument();
+                this.setVisible(false);
+                System.exit(0);
+            }
+            else {
+                this.setVisible(false);
+                System.exit(0);
+            }
+
         });
 
     }
