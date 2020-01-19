@@ -30,4 +30,9 @@ The main goal of the project is to -
 
 <img width="130" alt="ביאור 2020-01-19 174759" src="https://user-images.githubusercontent.com/57687222/72683975-3dfaf480-3ae5-11ea-807a-8500683a2dcd.png">
 
+7. *The Game:*
+
+<img width="751" alt="‏‏לכידה" src="https://user-images.githubusercontent.com/57687222/72684124-7e0ea700-3ae6-11ea-9b0d-b14a0b93c143.PNG">
+
+
 **Enjoy Playing!**
