@@ -32,7 +32,7 @@ public class AutomaticGameTest {
         gameGraph.init(myGame.getGraph());
         ArrayList<Fruit> fruits = new ArrayList<>();
         AutomaticGame.getGameFruits(fruits, gameGraph, myGame);
-        assertEquals(fruits.get(0), AutomaticGame.getBestFruit(fruits));
+        assertEquals(fruits.get(0), AutomaticGame.findBestFruit(fruits));
     }
 
     @Test

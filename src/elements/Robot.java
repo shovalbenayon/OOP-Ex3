@@ -68,6 +68,9 @@ public class Robot {
         this.destination = destination;
     }
 
+    public double getSpeed() {
+        return speed;
+    }
 
 
 

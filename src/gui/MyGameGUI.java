@@ -35,12 +35,14 @@ public class MyGameGUI extends JPanel {
     private final int Y_RANGE = 900;
     private JButton moveButton = new JButton("Move Robot");
     private JButton InfoServer = new JButton("Games Information");
+    private int UserID;
 
     // Threads
     private Thread MoveRobotManual;
     private Thread placeRobotsManual;
     private Thread placeRobotsAuto;
     private Thread moveRobotAuto;
+    private Thread sql;
 
     private BufferedImage appleImage;
     private BufferedImage androidImage;
@@ -69,9 +71,15 @@ public class MyGameGUI extends JPanel {
     }
 
     public MyGameGUI()  {
-        Game_Server.login(316150861);
 
+        String id = JOptionPane.showInputDialog("Enter your id number" );
+        try {
+            int idNum = Integer.parseInt(id);
+            Game_Server.login(UserID);
 
+        } catch (Exception Ex) {
+            JOptionPane.showMessageDialog(null, "Invalid input", "Error", JOptionPane.ERROR_MESSAGE);
+        }
         File r = new File("robot.png");
         try {
             Image robo = ImageIO.read(r);
@@ -129,21 +137,24 @@ public class MyGameGUI extends JPanel {
         }
         InitGui();
 
-        InfoServer.addActionListener(new ActionListener(
-
-        ) {
+        InfoServer.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                DataBaseGUI n = new DataBaseGUI();
             }
         });
 
     }
 
     public MyGameGUI(int gameScenario)  {
+        String id = JOptionPane.showInputDialog("Enter your id number" );
+        try {
+            int idNum = Integer.parseInt(id);
+            Game_Server.login(UserID);
 
-        Game_Server.login(316150861);
-        File r = new File("robot.png");
+        } catch (Exception Ex) {
+            JOptionPane.showMessageDialog(null, "Invalid input", "Error", JOptionPane.ERROR_MESSAGE);
+        }
         this.scenario = gameScenario;
         log = new KML_Logger(""+ scenario);
         JPanel mainPanel = new JPanel();
@@ -186,15 +197,12 @@ public class MyGameGUI extends JPanel {
         }
         InitGui();
 
-        InfoServer.addActionListener(new ActionListener(
-
-        ) {
+        InfoServer.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                DataBaseGUI n = new DataBaseGUI();
             }
         });
-
     }
 
     public void paint(Graphics g) {
@@ -468,7 +476,7 @@ public class MyGameGUI extends JPanel {
         // Automatic game threads
         placeRobotsAuto = new Thread(() -> {
             while (robotsCounter < robotsNum && scenario != 16  ) {
-                Fruit bestFruit = AutomaticGame.findFirstPos(this.FruitsCol);
+                Fruit bestFruit = AutomaticGame.findBestFruit(this.FruitsCol);
 
                 // Choose the best location based on the greatest fruits values
                 int autoSrcNode = bestFruit.getEdge().getSrc();
@@ -482,13 +490,13 @@ public class MyGameGUI extends JPanel {
             if (scenario == 16) {
                 robotsCounter = 0;
                 while (robotsCounter < robotsNum) {
-                    Fruit bestFruit = AutomaticGame.findFirstPos(this.FruitsCol);
+                    Fruit bestFruit = AutomaticGame.findBestFruit(this.FruitsCol);
 
                     // Choose the best location based on the greatest fruits values
                     int autoSrcNode = bestFruit.getEdge().getSrc();
                     myGame.addRobot(autoSrcNode);
                     FruitsCol = AutomaticGame.removeBest(FruitsCol, bestFruit);
-                    bestFruit = AutomaticGame.findFirstPos(this.FruitsCol);
+                    bestFruit = AutomaticGame.findBestFruit(this.FruitsCol);
                     FruitsCol = AutomaticGame.removeBest(FruitsCol, bestFruit);
 
                     repaint();
@@ -504,35 +512,34 @@ public class MyGameGUI extends JPanel {
             JSONObject getAutoGameScore;
             MovesCounter = 0;
 
-            while (myGame.timeToEnd() > 100) {
-                try {
-                    //To find always the best fruit after eating one
-                    FruitsCol.clear();
-                    AutomaticGame.getGameFruits(FruitsCol, dGraph, myGame);
-                    getAutoGameScore = new JSONObject(myGame.toString());
-                    JSONObject autoGameScore = getAutoGameScore.getJSONObject("GameServer");
-                    gameScore = autoGameScore.getInt("grade");
+             while (myGame.timeToEnd() > 100) {
+                 try {
+                     //To find always the best fruit after eating one
+                     FruitsCol.clear();
+                     AutomaticGame.getGameFruits(FruitsCol, dGraph, myGame);
+                     getAutoGameScore = new JSONObject(myGame.toString());
+                     JSONObject autoGameScore = getAutoGameScore.getJSONObject("GameServer");
+                     gameScore = autoGameScore.getInt("grade");
 
-                    try {
-                        if (scenario == 5) Thread.sleep(120);
-                        if (scenario == 9) Thread.sleep(101);
-                        if (scenario == 13) Thread.sleep(100);
-                        if (scenario == 16 ) Thread.sleep(82);
-                        if (scenario == 19 ) Thread.sleep(82);
+                     try {
+                         if (scenario == 5) Thread.sleep(120);
+                         if (scenario == 9) Thread.sleep(101);
+                         if (scenario == 13) Thread.sleep(100);
+                         if (scenario == 16 ) Thread.sleep(86); //shoval
+                         if (scenario == 19 ) Thread.sleep(82);
                         if (scenario == 23) Thread.sleep(39);
 
                         else Thread.sleep(105);
-                        AutomaticGame.moveRobots(this.myGame, this.dGraph, this.FruitsCol);
-                        Thread.sleep(20);
+                        AutomaticGame.moveRobots(this.myGame, this.FruitsCol);
                         MovesCounter++;
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                      } catch (Exception e) {
+                             e.printStackTrace();
+                     }
 
-                }
-                catch (Exception ignored) { }
-                repaint();
-            }
+                 }
+                 catch (Exception ignored) { }
+                 repaint();
+             }
 
             Image b = byeImage;
             Image newb = b.getScaledInstance(130, 150,  java.awt.Image.SCALE_SMOOTH);
@@ -553,6 +560,12 @@ public class MyGameGUI extends JPanel {
 
         });
 
+        sql = new Thread() {
+            @Override
+            public void run() {
+                DataBaseGUI n = new DataBaseGUI();
+            }
+        };
     }
 
     /**

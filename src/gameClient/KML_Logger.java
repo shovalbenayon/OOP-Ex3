@@ -94,4 +94,8 @@ public class KML_Logger {
         }
     }
 
+    public String toString(){
+        return content.toString();
+    }
+
 }

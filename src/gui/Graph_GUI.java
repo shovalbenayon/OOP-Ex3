@@ -54,7 +54,7 @@ public class Graph_GUI extends JFrame implements ActionListener, MouseListener,S
     private void initGUI()
     {
         this.setSize(this.graph_algo.get_Width(), this.graph_algo.get_Height()); // set the size of the window according the existing graph
-       this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         MenuBar menuBar = new MenuBar();
 

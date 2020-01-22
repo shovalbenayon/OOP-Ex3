@@ -14,9 +14,8 @@ import dataStructure.edge_data;
 import dataStructure.node_data;
 
 /**
- *
- *
- * @author
+ *This class represent an Automatic game
+ * @author shoval benayon
  *
  */
 public class AutomaticGame {
@@ -39,7 +38,12 @@ public class AutomaticGame {
     }
 
 
-    public static Fruit findFirstPos(ArrayList<Fruit> FruitsCol) { // find an edge with fruit to put the robot in the node
+    /**
+     * This method finds the best fruit from the collection
+     * @param FruitsCol - the collection of fruit
+     * @return - The best fruit
+     */
+    public static Fruit findBestFruit(ArrayList<Fruit> FruitsCol) { // find an edge with fruit to put the robot in the node
         Fruit bestFruit = FruitsCol.get(0);
         for (Fruit myFruit : FruitsCol)
             if (myFruit.getValue() > bestFruit.getValue())
@@ -47,6 +51,13 @@ public class AutomaticGame {
 
         return bestFruit;
     }
+
+    /**
+     * This method remove the best fruit from the collection so the next robot won't go there
+     * @param fruits - The collection of fruit
+     * @param fruit - The best fruit
+     * @return - The fruits collection after deleting the best fruit
+     */
     public static ArrayList<Fruit> removeBest(ArrayList<Fruit> fruits, Fruit fruit){
         for (Fruit myFruit : fruits) {
             if (fruit.getValue() == myFruit.getValue()) {
@@ -57,40 +68,36 @@ public class AutomaticGame {
         return fruits;
     }
     /**
-     * the main function , to move the robot with the server to the next edge in shortest path.
-     * the moves and the time left is printing.
-     * @param game the game from the server
-     * @param gg the graph of the game
-     * @param fruits the current fruits in the game
+     * This method move the robots to the next fruit using shortest path algorithms
+     * @param game - The game
+     * @param fruits - The fruits collection from the game
      */
-    public static game_service moveRobots(game_service game, DGraph gg, List<Fruit> fruits) {
+    public static game_service moveRobots(game_service game, List<Fruit> fruits) {
         AutomaticGame.fruits = fruits;
         dgraph = new DGraph();
         dgraph.init(game.getGraph());
         AutomaticGame.graph_algo = new Graph_Algo(dgraph);
         List<String> log = game.move();
         if (log != null) {
-            long time = game.timeToEnd();
             for (int i = 0; i < log.size(); i++) {
                 String robot_json = log.get(i);
                 try {
                     JSONObject line = new JSONObject(robot_json);
                     JSONObject ttt = line.getJSONObject("Robot");
-                    String pos = ttt.getString("pos");
                     int robotID = ttt.getInt("id");
                     int src = ttt.getInt("src");
                     int dest = ttt.getInt("dest");
                     if (dest == -1) {
-                        edge_data e = nextEdge(src, AutomaticGame.fruits);
-                        List<node_data> nodes = graph_algo.shortestPath(src, e.getSrc());
-                        if (nodes == null) {
-                            game.chooseNextEdge(robotID, e.getDest());
+                        edge_data nextEdge = ClosestEdge(src, AutomaticGame.fruits);
+                        List<node_data> nodesPath = graph_algo.shortestPath(src, nextEdge.getSrc());
+                        if (nodesPath == null) {
+                            game.chooseNextEdge(robotID, nextEdge.getDest());
                         } else {
-                            for (node_data n : nodes) {
+                            for (node_data n : nodesPath) {
                                 dest = n.getKey();
                                 game.chooseNextEdge(robotID, dest);
                             }
-                            game.chooseNextEdge(robotID, e.getDest());
+                            game.chooseNextEdge(robotID, nextEdge.getDest());
                         }
                     }
                 } catch (JSONException e) {
@@ -109,14 +116,14 @@ public class AutomaticGame {
      * @return the closest edge with a fruit.
      */
 
-    private static edge_data nextEdge(int robotPos, List<Fruit> fruits) { // give the edge with the fruit with the	shortest path.
+    private static edge_data ClosestEdge(int robotPos, List<Fruit> fruits) { // give the edge with the fruit with the	shortest path.
         double minPath = Double.POSITIVE_INFINITY;
         int bestSrc = robotPos;
         int bestDest = robotPos;
         double temp = -1;
-        int indF = -1;
         for (int i = 0; i < fruits.size(); i++) {
-            edge_data e = findEdgeFruit(dgraph, fruits.get(i));
+            Fruit currentFruit = fruits.get(i);
+            edge_data e = dgraph.getEdge(currentFruit.getEdge().getSrc() , currentFruit.getEdge().getDest());
             temp = graph_algo.shortestPathDist(robotPos, e.getSrc());
             if ( temp < minPath) {
                 minPath = temp;
@@ -126,53 +133,6 @@ public class AutomaticGame {
         }
         //	autoGame.fruits.remove(indF);
         return dgraph.getEdge(bestSrc, bestDest);
-    }
-
-    /**
-     * this function find an edge with a given fruit, by compare the adding distance from 2 nodes to the fruit, and the distance between the 2 nodes.
-     * the function return the right edge considering the type of the fruit (banana for down , apple for up edge).
-     * @param graph the graph of the game
-     * @param fr the current fruit on the game to check
-     * @return the edge with the given fruit.
-     */
-    public static edge_data findEdgeFruit(DGraph graph, Fruit fr) {
-        int src = 0;
-        int dest = 0;
-
-        for (node_data n : graph.getV()) {
-            for (edge_data e : graph.getE(n.getKey())) {
-                double dFruit = (Math.sqrt(Math.pow(n.getLocation().x() - fr.getPos().x(), 2)
-                        + Math.pow(n.getLocation().y() - fr.getPos().y(), 2)))
-                        + Math.sqrt(Math.pow(graph.getNode(e.getDest()).getLocation().x() - fr.getPos().x(), 2)
-                        + Math.pow(graph.getNode(e.getDest()).getLocation().y() - fr.getPos().y(), 2));
-                double dNodes = (Math
-                        .sqrt(Math.pow(n.getLocation().x() - graph.getNode(e.getDest()).getLocation().x(), 2)
-                                + Math.pow(n.getLocation().y() - graph.getNode(e.getDest()).getLocation().y(), 2)));
-                double highNode = graph.getNode(e.getSrc()).getLocation().y()
-                        - graph.getNode(e.getDest()).getLocation().y();
-                if (Math.abs(dNodes - dFruit) < 0.000001) {
-                    if (fr.getType() == -1) { // if its andoroid
-                        if (highNode < 1) { // if the direction is from lower id node to higher id node
-                            src = graph.getNode(e.getSrc()).getKey();
-                            dest = graph.getNode(e.getDest()).getKey();
-                        } else {
-                            src = graph.getNode(e.getDest()).getKey();
-                            dest = graph.getNode(e.getSrc()).getKey();
-                        }
-                    } else { // if its apple
-                        if (highNode > 1) { // if the direction is from higher id node to lower id node
-                            src = graph.getNode(e.getSrc()).getKey();
-                            dest = graph.getNode(e.getDest()).getKey();
-                        } else {
-                            src = graph.getNode(e.getDest()).getKey();
-                            dest = graph.getNode(e.getSrc()).getKey();
-
-                        }
-                    }
-                }
-            }
-        }
-        return graph.getEdge(src, dest);
     }
 
 }

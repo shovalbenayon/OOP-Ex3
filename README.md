@@ -1,5 +1,7 @@
 # OOP-Ex3
-n this project we represnt an implementation of the game "The Maze Of Waze". This assignment data structures and algorithms are based on previous project Ex2: https://github.com/shovalbenayon/OOP-Ex2
+In this project we represnt an implementation of the game "The Maze Of Waze". This assignment data structures and algorithms are based on previous project Ex2: https://github.com/shovalbenayon/OOP-Ex2. 
+The project connected to DataBase and The DB have 11 Scenarios - {0 , 1, 3 , 5, 9 , 11 ,13 , 16 , 19 , 20 , 23}.
+The user can pass to higher level Only if he was able to meet the criteria. (The Table of the criteria is mention at the wiki - SimpleDB page).
 
 The main goal of the project is to - 
 - earn as many points as possible in given time. (30-60 seconds)
@@ -34,5 +36,6 @@ The main goal of the project is to -
 
 <img width="751" alt="‏‏לכידה" src="https://user-images.githubusercontent.com/57687222/72684124-7e0ea700-3ae6-11ea-9b0d-b14a0b93c143.PNG">
 
+8. By clicking the button "Games information" you can see info from the DB.
 
 **Enjoy Playing!**
