@@ -60,7 +60,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.main">
+  <component name="RunManager" selected="JAR Application.GameServer_v0.32.jar">
     <configuration name="Example2" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="gameClient.Example2" />
       <module name="Ex3_v2" />
@@ -129,6 +129,12 @@
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
+    </configuration>
+    <configuration name="GameServer_v0.32.jar" type="JarApplication">
+      <option name="JAR_PATH" value="$PROJECT_DIR$/lib/GameServer_v0.32.jar" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="ALTERNATIVE_JRE_PATH" value="1.8" />
+      <method v="2" />
     </configuration>
     <configuration name="JavaAPIforKml-2.2.1-javadoc.jar (1)" type="JarApplication">
       <option name="JAR_PATH" value="$PROJECT_DIR$/src/JavaAPIforKml-2.2.1-javadoc.jar" />

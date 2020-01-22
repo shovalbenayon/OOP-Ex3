@@ -65,5 +65,8 @@
     <orderEntry type="library" name="JavaAPIforKml-2.2.1-javadoc  (2)" level="project" />
     <orderEntry type="library" name="JavaAPIforKml-2.2.1-javadoc (3)" level="project" />
     <orderEntry type="library" name="JavaAPIforKml-2.2.1-javadoc (4)" level="project" />
+    <orderEntry type="library" name="GameServer_v0.32" level="project" />
+    <orderEntry type="library" name="mysql-connector-java-5.1.47" level="project" />
+    <orderEntry type="library" name="javaapiforkml-2.2.0 (2)" level="project" />
   </component>
 </module>

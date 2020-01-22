@@ -1,8 +1,9 @@
 package gui;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 import java.util.List;
 import javax.imageio.ImageIO;
@@ -22,9 +23,10 @@ import dataStructure.edge_data;
 import dataStructure.node_data;
 import utils.Point3D;
 
+
 public class MyGameGUI extends JPanel {
     private game_service myGame;
-    private int gameNumber;
+    private int scenario;
     private DGraph dGraph = new DGraph();
     private Graph_Algo graph_algo = new Graph_Algo();
     private ArrayList<Fruit> FruitsCol = new ArrayList<>();
@@ -32,6 +34,7 @@ public class MyGameGUI extends JPanel {
     private final int X_RANGE = 1500;
     private final int Y_RANGE = 900;
     private JButton moveButton = new JButton("Move Robot");
+    private JButton InfoServer = new JButton("Games Information");
 
     // Threads
     private Thread MoveRobotManual;
@@ -66,6 +69,9 @@ public class MyGameGUI extends JPanel {
     }
 
     public MyGameGUI()  {
+        Game_Server.login(316150861);
+
+
         File r = new File("robot.png");
         try {
             Image robo = ImageIO.read(r);
@@ -75,22 +81,23 @@ public class MyGameGUI extends JPanel {
             String[] options = {"0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23"};
             int gameNum = JOptionPane.showOptionDialog(null, "Choose the Level you would like to play", "Click a button",
                     JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, icon, options, options[0]);
-            this.gameNumber = gameNum;
+            this.scenario = gameNum;
             if (gameNum == JOptionPane.CLOSED_OPTION){
                 System.exit(0);
             }
         } catch (IOException | HeadlessException e) {
             e.printStackTrace();
         }
-        log = new KML_Logger(""+gameNumber);
+        log = new KML_Logger(""+ scenario);
         JPanel mainPanel = new JPanel();
         mainPanel.setPreferredSize(new Dimension(X_RANGE, Y_RANGE));
         mainPanel.add(moveButton);
+        mainPanel.add(InfoServer);
         this.add(mainPanel, BorderLayout.SOUTH);
         backgroundImage = Toolkit.getDefaultToolkit().createImage("Background.jpg");
         Threads();
 
-        myGame = Game_Server.getServer(gameNumber);
+        myGame = Game_Server.getServer(scenario);
         dGraph.init(myGame.getGraph());
         graph_algo.init(dGraph);
         //get the number of robots
@@ -121,6 +128,72 @@ public class MyGameGUI extends JPanel {
             e.printStackTrace();
         }
         InitGui();
+
+        InfoServer.addActionListener(new ActionListener(
+
+        ) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+
+    }
+
+    public MyGameGUI(int gameScenario)  {
+
+        Game_Server.login(316150861);
+        File r = new File("robot.png");
+        this.scenario = gameScenario;
+        log = new KML_Logger(""+ scenario);
+        JPanel mainPanel = new JPanel();
+        mainPanel.setPreferredSize(new Dimension(X_RANGE, Y_RANGE));
+        mainPanel.add(moveButton);
+        mainPanel.add(InfoServer);
+        this.add(mainPanel, BorderLayout.SOUTH);
+        backgroundImage = Toolkit.getDefaultToolkit().createImage("Background.jpg");
+        Threads();
+
+        myGame = Game_Server.getServer(scenario);
+        dGraph.init(myGame.getGraph());
+        graph_algo.init(dGraph);
+        //get the number of robots
+        try {
+            JSONObject line;
+            line = new JSONObject(this.myGame.toString());
+            JSONObject server = line.getJSONObject("GameServer");
+            robotsNum = server.getInt("robots");
+
+        } catch (Exception var10) {
+            var10.printStackTrace();
+        }
+        findNodes(myGame.getGraph()); //Nodes to kml
+
+
+        try {
+            File apple = new File("apple.png");
+            appleImage = ImageIO.read(apple);
+            File android= new File("android.png");
+            androidImage = ImageIO.read(android);
+            File robot = new File("robot.png");
+            robotImage = ImageIO.read(robot);
+            File background = new File("background.jpg");
+            backgroundImage = ImageIO.read(background);
+            File bye = new File("bye.png");
+            byeImage = ImageIO.read(bye);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        InitGui();
+
+        InfoServer.addActionListener(new ActionListener(
+
+        ) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
 
     }
 
@@ -235,7 +308,7 @@ public class MyGameGUI extends JPanel {
                                 int destinationNode = Integer.parseInt(destNode);
                                 if (dGraph.getNode(destinationNode) == null) throw new RuntimeException();
                                 myGame.chooseNextEdge(Integer.parseInt(idRobot), destinationNode);
-                                MovesCounter++;
+
                             } catch (Exception Ex) {
                                 JOptionPane.showMessageDialog(null, "Invalid input", "Error", JOptionPane.ERROR_MESSAGE);
                             }
@@ -359,6 +432,7 @@ public class MyGameGUI extends JPanel {
             long start = System.currentTimeMillis();
             MovesCounter = 0;
             while (myGame.isRunning()) {
+                MovesCounter++;
                 if (System.currentTimeMillis() - start > 20) {
                     try {
                         getscore = new JSONObject(myGame.toString());
@@ -376,10 +450,12 @@ public class MyGameGUI extends JPanel {
             Image b = byeImage;
             Image newb = b.getScaledInstance(130, 150,  java.awt.Image.SCALE_SMOOTH);
             ImageIcon by = new ImageIcon(newb);
-            JOptionPane.showMessageDialog(this, "Game Over!\n In stage "+ this.gameNumber+" The Final Score : " + this.gameScore +" in " + this.MovesCounter + " Moves ", "Close" , JOptionPane.ERROR_MESSAGE, by );
+            JOptionPane.showMessageDialog(this, "Game Over!\n In stage "+ this.scenario +" The Final Score : " + this.gameScore +" in " + this.MovesCounter + " Moves ", "Close" , JOptionPane.ERROR_MESSAGE, by );
             int n = JOptionPane.showConfirmDialog(this , "Export to KML ?" , "Export" , JOptionPane.YES_NO_OPTION);
             if (n == JOptionPane.YES_OPTION){
                 log.closeDocument();
+                String remark = "data/" +this.scenario;
+                myGame.sendKML(remark);
                 this.setVisible(false);
                 System.exit(0);
             }
@@ -391,23 +467,33 @@ public class MyGameGUI extends JPanel {
 
         // Automatic game threads
         placeRobotsAuto = new Thread(() -> {
-            while (robotsCounter < robotsNum) {
-                //gets the most valuable fruit
-                Fruit bestFruit = AutomaticGame.getBestFruit(FruitsCol);
+            while (robotsCounter < robotsNum && scenario != 16  ) {
+                Fruit bestFruit = AutomaticGame.findFirstPos(this.FruitsCol);
+
                 // Choose the best location based on the greatest fruits values
-                int autoSrcNode;
-                //If the direction is from lower id node to higher id node so place the robot in the source so the robot can eat the fruit
-                if (bestFruit.getType() == 1)
-                    autoSrcNode = bestFruit.getEdge().getSrc(); // Apple
-
-                //else , opposite
-                else
-                    autoSrcNode = bestFruit.getEdge().getDest(); // android
+                int autoSrcNode = bestFruit.getEdge().getSrc();
                 myGame.addRobot(autoSrcNode);
+                FruitsCol = AutomaticGame.removeBest(FruitsCol, bestFruit);
 
-                AutomaticGame.removeBest(FruitsCol, bestFruit);
                 repaint();
                 robotsCounter++;
+            }
+
+            if (scenario == 16) {
+                robotsCounter = 0;
+                while (robotsCounter < robotsNum) {
+                    Fruit bestFruit = AutomaticGame.findFirstPos(this.FruitsCol);
+
+                    // Choose the best location based on the greatest fruits values
+                    int autoSrcNode = bestFruit.getEdge().getSrc();
+                    myGame.addRobot(autoSrcNode);
+                    FruitsCol = AutomaticGame.removeBest(FruitsCol, bestFruit);
+                    bestFruit = AutomaticGame.findFirstPos(this.FruitsCol);
+                    FruitsCol = AutomaticGame.removeBest(FruitsCol, bestFruit);
+
+                    repaint();
+                    robotsCounter++;
+                }
             }
 
             myGame.startGame();
@@ -416,43 +502,48 @@ public class MyGameGUI extends JPanel {
 
         moveRobotAuto = new Thread(() -> {
             JSONObject getAutoGameScore;
-            long start = System.currentTimeMillis();
             MovesCounter = 0;
-            while (myGame.timeToEnd() > 100) {
-                if (System.currentTimeMillis() - start > 20) {
-                    try {
-                        //To find always the best fruit after eating one
-                        FruitsCol.clear();
-                        AutomaticGame.getGameFruits(FruitsCol, dGraph, myGame);
-                        getAutoGameScore = new JSONObject(myGame.toString());
-                        JSONObject autoGameScore = getAutoGameScore.getJSONObject("GameServer");
-                        gameScore = autoGameScore.getInt("grade");
 
-                        for  (String autoRobot : myGame.getRobots()) {
-                            Robot currentRobot = new Robot(autoRobot);
-                            //If the robot do not have destination , he will go to the best node to collect a fruit
-                            if (currentRobot.getDestination() == -1) {
-                                currentRobot.setDestination(AutomaticGame.getNext(FruitsCol, dGraph, currentRobot.getSource()));
-                                myGame.chooseNextEdge(currentRobot.getID(), currentRobot.getDestination());
-                                MovesCounter++;
-                            }
-                        }
-                        myGame.move();
-                    } catch (Exception ignored) {
+            while (myGame.timeToEnd() > 100) {
+                try {
+                    //To find always the best fruit after eating one
+                    FruitsCol.clear();
+                    AutomaticGame.getGameFruits(FruitsCol, dGraph, myGame);
+                    getAutoGameScore = new JSONObject(myGame.toString());
+                    JSONObject autoGameScore = getAutoGameScore.getJSONObject("GameServer");
+                    gameScore = autoGameScore.getInt("grade");
+
+                    try {
+                        if (scenario == 5) Thread.sleep(120);
+                        if (scenario == 9) Thread.sleep(101);
+                        if (scenario == 13) Thread.sleep(100);
+                        if (scenario == 16 ) Thread.sleep(82);
+                        if (scenario == 19 ) Thread.sleep(82);
+                        if (scenario == 23) Thread.sleep(39);
+
+                        else Thread.sleep(105);
+                        AutomaticGame.moveRobots(this.myGame, this.dGraph, this.FruitsCol);
+                        Thread.sleep(20);
+                        MovesCounter++;
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
 
-                    start = System.currentTimeMillis();
-                    repaint();
                 }
+                catch (Exception ignored) { }
+                repaint();
             }
+
             Image b = byeImage;
             Image newb = b.getScaledInstance(130, 150,  java.awt.Image.SCALE_SMOOTH);
             ImageIcon by = new ImageIcon(newb);
-            JOptionPane.showMessageDialog(this, "Game Over!\n In stage "+ this.gameNumber+ " The Final Score : " + this.gameScore +" in " + this.MovesCounter + " Moves ", "Close" , JOptionPane.ERROR_MESSAGE, by );
+            JOptionPane.showMessageDialog(this, "Game Over!\n In stage "+ this.scenario + " The Final Score : " + this.gameScore +" in " + this.MovesCounter + " Moves ", "Close" , JOptionPane.ERROR_MESSAGE, by );
             int n = JOptionPane.showConfirmDialog(this , "Export to KML ?" , "Export" , JOptionPane.YES_NO_OPTION);
             if (n == JOptionPane.YES_OPTION){
                 log.closeDocument();
                 this.setVisible(false);
+                String remark = "data/" +this.scenario;
+                myGame.sendKML(remark);
                 System.exit(0);
             }
             else {
