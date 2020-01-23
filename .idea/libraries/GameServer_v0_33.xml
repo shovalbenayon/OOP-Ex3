@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="GameServer_v0.33">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/GameServer_v0.33.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/GameServer_v0.33.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

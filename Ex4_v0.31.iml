@@ -69,5 +69,6 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="GameServer_v0.33" level="project" />
   </component>
 </module>

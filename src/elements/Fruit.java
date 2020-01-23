@@ -101,22 +101,32 @@ public class Fruit  {
             for (edge_data eD : edgesCol) {
                 double xDist = nD.getLocation().x() - gameGraph.getNode(eD.getDest()).getLocation().x();
                 double yDist = nD.getLocation().y() - gameGraph.getNode(eD.getDest()).getLocation().y();
-                edgeDist = Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2));
+                edgeDist = Math.sqrt(xDist * xDist + yDist * yDist);
 
                 double xSrcToFruit = nD.getLocation().x() - this.getPos().x();
                 double ySrcToFruit = nD.getLocation().y() - this.getPos().y();
                 double xFruitToDest = this.getPos().x() - gameGraph.getNode(eD.getDest()).getLocation().x();
                 double yFruitToDest = this.getPos().y() - gameGraph.getNode(eD.getDest()).getLocation().y();
-                srcToFruitDist = Math.sqrt(Math.pow(xSrcToFruit, 2) + Math.pow(ySrcToFruit, 2));
-                fruitToDestDist = Math.sqrt(Math.pow(xFruitToDest, 2) + Math.pow(yFruitToDest, 2));
+                srcToFruitDist = Math.sqrt(xSrcToFruit * xSrcToFruit + ySrcToFruit * ySrcToFruit);
+                fruitToDestDist = Math.sqrt(xFruitToDest * xFruitToDest + yFruitToDest * yFruitToDest);
                 fruitDist = srcToFruitDist + fruitToDestDist;
 
-                if (Math.abs(edgeDist - fruitDist) < epsilon) return eD;
+                if (Math.abs(edgeDist - fruitDist) < epsilon) {
+
+                    if (this.getType() == 1) {
+                        if (eD.getSrc() < eD.getDest()) return eD;
+                        return gameGraph.getEdge(eD.getDest(), eD.getSrc());
+                    }
+
+                    else if (this.getType() == -1) {
+                        if (eD.getSrc() < eD.getDest()) return gameGraph.getEdge(eD.getDest(), eD.getSrc());
+                        return eD;
+                    }
+                }
             }
         }
 
         return null;
     }
-
 
 }

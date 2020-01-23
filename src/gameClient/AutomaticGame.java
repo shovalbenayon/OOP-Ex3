@@ -131,7 +131,6 @@ public class AutomaticGame {
                 bestDest = e.getDest();
             }
         }
-        //	autoGame.fruits.remove(indF);
         return dgraph.getEdge(bestSrc, bestDest);
     }
 

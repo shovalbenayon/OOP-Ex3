@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public class DataBaseGUI extends JFrame implements ActionListener , Runnable {
+public class DataBaseGUI extends JFrame implements ActionListener  {
     private JTable MainTable;
     private boolean startFlag = true;
     Object[][] Info;
@@ -23,7 +23,7 @@ public class DataBaseGUI extends JFrame implements ActionListener , Runnable {
      */
 	private void InitGui(){
         this.setSize(600, 800); // set the size of the window according the existing graph
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    //    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         MenuBar menuBar = new MenuBar();
 
@@ -101,8 +101,4 @@ public class DataBaseGUI extends JFrame implements ActionListener , Runnable {
 
     }
 
-    @Override
-    public void run() {
-        InitGui();
-    }
 }
