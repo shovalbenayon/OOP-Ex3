@@ -12,6 +12,8 @@ import elements.Fruit;
 import elements.Robot;
 import gameClient.AutomaticGame;
 import gameClient.KML_Logger;
+import gameClient.SimpleDB;
+import gameClient.Student;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,6 +24,7 @@ import dataStructure.DGraph;
 import dataStructure.edge_data;
 import dataStructure.node_data;
 import utils.Point3D;
+import utils.Range;
 
 /**
  * * This game is a simple game, in which the chosen fruits(apple or android) are collected by robot
@@ -98,6 +101,7 @@ public class MyGameGUI extends JPanel {
     private boolean autoGame = false;
     private boolean IntialFlag = false;
     private KML_Logger log;
+    private Object[][] Info;
 
 
     private void InitGui() {
@@ -179,9 +183,56 @@ public class MyGameGUI extends JPanel {
         InfoServer.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                sql.start();
-            }
-        });
+                        Image img = robotImage;
+                        Image newimg = img.getScaledInstance(130, 150,  java.awt.Image.SCALE_SMOOTH);
+                        ImageIcon icon = new ImageIcon(newimg);
+                        String[] options = {"Global ranking","Best ranking levels","My Level","My Totals games in the server","My data base"};
+
+
+                        String op = (String) JOptionPane.showInputDialog(null,"Choose your options" ,"Options",JOptionPane.QUESTION_MESSAGE,icon , options, options[0]);
+
+
+                        if (op == "Global ranking") {
+                            Object[] stageSelection = {"0", "1", "3", "5", "9", "11", "13", "16", "19", "20", "23"};
+                            String initialStage = "0";
+                            Object selectedStage = JOptionPane.showInputDialog(null, "Choose",
+                                    "Main menu", JOptionPane.QUESTION_MESSAGE, null, stageSelection, initialStage);
+                            ArrayList<Student> arr = SimpleDB.getRankingForLevel(Integer.parseInt((String) selectedStage));
+                            Range stat =SimpleDB.Ranking(arr,UserID);
+                            JOptionPane.showMessageDialog(null, "Ranking in class for level " + selectedStage + " : " + stat.get_min() +" from " + stat.get_max());
+                        }
+                        if (op == "Best ranking levels"){
+                            String[] columns = {"Game Scenario", "Best Score"};
+                            JFrame newFrame = new JFrame();
+                            newFrame.setSize(400 ,500);
+                            newFrame.setVisible(true);
+                            newFrame.setLocationRelativeTo(null);
+                            newFrame.setTitle("Bast Scores");
+                            Info = SimpleDB.bestScores(String.valueOf(UserID));
+                            JTable newtable = new JTable(Info, columns);
+                            newFrame.add(new JScrollPane(newtable));
+                        }
+                        if (op.equals("My Level")){
+                            JOptionPane.showMessageDialog(null, "My Max level is : " + SimpleDB.showMaxLevel(String.valueOf(UserID)));
+                        }
+                        if (op.equals("My Totals games in the server")){
+                            JOptionPane.showMessageDialog(null , "Your total games in the server until now : "+SimpleDB.HowMuch(UserID));
+                        }
+
+                        if (op.equals("My data base")){
+                            String[] columns = new String[] {
+                                    "Number og game", "Id", "Level", "Score", "Moves", "Date"
+                            };
+
+                            JFrame newFrame = new JFrame();
+                            newFrame.setSize(300, 600);
+                            newFrame.setTitle("Data Table");
+                            Info = SimpleDB.printUserLog(UserID);
+                            JTable MainTable = new JTable(Info, columns);
+                            newFrame.add(new JScrollPane(MainTable));
+                        }
+                    }
+                });
 
     }
 
@@ -239,7 +290,54 @@ public class MyGameGUI extends JPanel {
         InfoServer.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                sql.start();
+                Image img = robotImage;
+                Image newimg = img.getScaledInstance(130, 150,  java.awt.Image.SCALE_SMOOTH);
+                ImageIcon icon = new ImageIcon(newimg);
+                String[] options = {"Global ranking","Best ranking levels","My Level","My Totals games in the server","My data base"};
+
+
+                String op = (String) JOptionPane.showInputDialog(null,"Choose your options" ,"Options",JOptionPane.QUESTION_MESSAGE,icon , options, options[0]);
+
+
+                if (op == "Global ranking") {
+                    Object[] stageSelection = {"0", "1", "3", "5", "9", "11", "13", "16", "19", "20", "23"};
+                    String initialStage = "0";
+                    Object selectedStage = JOptionPane.showInputDialog(null, "Choose",
+                            "Main menu", JOptionPane.QUESTION_MESSAGE, null, stageSelection, initialStage);
+                    ArrayList<Student> arr = SimpleDB.getRankingForLevel(Integer.parseInt((String) selectedStage));
+                    Range stat =SimpleDB.Ranking(arr,UserID);
+                    JOptionPane.showMessageDialog(null, "Ranking in class for level " + selectedStage + " : " + stat.get_min() +" from " + stat.get_max());
+                }
+                if (op == "Best ranking levels"){
+                    String[] columns = {"Game Scenario", "Best Score"};
+                    JFrame newFrame = new JFrame();
+                    newFrame.setSize(400 ,500);
+                    newFrame.setVisible(true);
+                    newFrame.setLocationRelativeTo(null);
+                    newFrame.setTitle("Bast Scores");
+                    Info = SimpleDB.bestScores(String.valueOf(UserID));
+                    JTable newtable = new JTable(Info, columns);
+                    newFrame.add(new JScrollPane(newtable));
+                }
+                if (op.equals("My Level")){
+                    JOptionPane.showMessageDialog(null, "My Max level is : " + SimpleDB.showMaxLevel(String.valueOf(UserID)));
+                }
+                if (op.equals("My Totals games in the server")){
+                    JOptionPane.showMessageDialog(null , "Your total games in the server until now : "+SimpleDB.HowMuch(UserID));
+                }
+
+                if (op.equals("My data base")){
+                    String[] columns = new String[] {
+                            "Number og game", "Id", "Level", "Score", "Moves", "Date"
+                    };
+
+                    JFrame newFrame = new JFrame();
+                    newFrame.setSize(300, 600);
+                    newFrame.setTitle("Data Table");
+                    Info = SimpleDB.printUserLog(UserID);
+                    JTable MainTable = new JTable(Info, columns);
+                    newFrame.add(new JScrollPane(MainTable));
+                }
             }
         });
     }
@@ -661,12 +759,6 @@ public class MyGameGUI extends JPanel {
 
         });
 
-        sql = new Thread() {
-            @Override
-            public void run() {
-                DataBaseGUI n = new DataBaseGUI();
-            }
-        };
     }
 
     /**

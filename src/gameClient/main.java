@@ -18,10 +18,10 @@ import java.io.IOException;
 public class main {
     public static void main(String[] args) throws IOException {
 
-       //MyGameGUI games = new MyGameGUI(20);
+       MyGameGUI games = new MyGameGUI();
         // MyGameGUI games = new MyGameGUI(-31);
        // draw_million();
-        DataBaseGUI h = new DataBaseGUI();
+      //  DataBaseGUI h = new DataBaseGUI();
 
 
 
