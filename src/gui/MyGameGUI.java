@@ -74,7 +74,6 @@ public class MyGameGUI extends JPanel {
     private JButton moveButton = new JButton("Move Robot");
     private JButton InfoServer = new JButton("Data Base");
     private int UserID;
-    private int min_dt;
 
 
     // Threads

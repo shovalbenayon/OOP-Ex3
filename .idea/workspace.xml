@@ -53,45 +53,6 @@
     </option>
   </component>
   <component name="RunManager" selected="Application.main">
-    <configuration name="Ex4_Client" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="gameClient.Ex4_Client" />
-      <module name="Ex4_v0.31" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="gameClient.AutomaticGame" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="SQLData" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="gameClient.SQLData" />
-      <module name="Ex4_v0.31" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="gui.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="SimpleDB" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="gameClient.SimpleDB" />
-      <module name="Ex4_v0.31" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="gameClient.AutomaticGame" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="gameClient.main" />
       <module name="Ex4_v0.31" />
@@ -104,6 +65,75 @@
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
+    </configuration>
+    <configuration name="Graph_GUITests.Million" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Ex4_v0.31" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Tests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="Tests" />
+      <option name="MAIN_CLASS_NAME" value="Tests.Graph_GUITests" />
+      <option name="METHOD_NAME" value="Million" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="JSONTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Ex4_v0.31" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Tests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="Tests" />
+      <option name="MAIN_CLASS_NAME" value="Tests.JSONTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="JSONTest.ChackNodes" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Ex4_v0.31" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Tests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="Tests" />
+      <option name="MAIN_CLASS_NAME" value="Tests.JSONTest" />
+      <option name="METHOD_NAME" value="ChackNodes" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="JSONTest.CheckRobots" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Ex4_v0.31" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Tests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="Tests" />
+      <option name="MAIN_CLASS_NAME" value="Tests.JSONTest" />
+      <option name="METHOD_NAME" value="CheckRobots" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Ex4_v0.31.jar" type="JarApplication">
+      <option name="JAR_PATH" value="$PROJECT_DIR$/classes/artifacts/Ex4_v0_31_jar/Ex4_v0.31.jar" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="ALTERNATIVE_JRE_PATH" value="1.8" />
+      <method v="2" />
     </configuration>
     <configuration name="GameServer_v0.32.jar" type="JarApplication">
       <option name="JAR_PATH" value="$PROJECT_DIR$/lib/GameServer_v0.32.jar" />
@@ -120,9 +150,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Application.main" />
-        <item itemvalue="Application.SimpleDB" />
-        <item itemvalue="Application.SQLData" />
-        <item itemvalue="Application.Ex4_Client" />
+        <item itemvalue="JUnit.Graph_GUITests.Million" />
+        <item itemvalue="JUnit.JSONTest" />
+        <item itemvalue="JUnit.JSONTest.CheckRobots" />
+        <item itemvalue="JUnit.JSONTest.ChackNodes" />
       </list>
     </recent_temporary>
   </component>

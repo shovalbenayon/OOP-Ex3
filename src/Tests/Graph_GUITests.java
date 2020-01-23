@@ -54,7 +54,6 @@ public class Graph_GUITests
         graph.connect(v7.getKey(), v9.getKey(), 11);
 
         Graph_GUI window = new Graph_GUI(graph);
-        window.setVisible(true);
     }
 
     @Test
@@ -77,6 +76,21 @@ public class Graph_GUITests
 
         Graph_GUI window = new Graph_GUI(myDG);
         window.setVisible(true);
+
+    }
+
+    @Test
+    public void Million(){
+        graph myDG = new DGraph();
+        for (int i = 0; i < 1000000 ; i++) {
+            myDG.addNode(new DataNode(i, new Point3D(Math.random()*i,Math.random()*(i+1))));
+
+        }
+        for (int i = 0; i < 99999; i++) {
+            myDG.connect(i,i+1,1);
+
+        }
+        Graph_GUI window = new Graph_GUI(myDG);
 
     }
 }
