@@ -84,7 +84,6 @@ public class MyGameGUI extends JPanel {
     private Thread placeRobotsManual;
     private Thread placeRobotsAuto;
     private Thread moveRobotAuto;
-    private Thread sql;
 
     private BufferedImage appleImage;
     private BufferedImage androidImage;
@@ -102,6 +101,7 @@ public class MyGameGUI extends JPanel {
     private boolean IntialFlag = false;
     private KML_Logger log;
     private Object[][] Info;
+
 
 
     private void InitGui() {
@@ -189,8 +189,7 @@ public class MyGameGUI extends JPanel {
                         String[] options = {"Global ranking","Best ranking levels","My Level","My Totals games in the server","My data base"};
 
 
-                        String op = (String) JOptionPane.showInputDialog(null,"Choose your options" ,"Options",JOptionPane.QUESTION_MESSAGE,icon , options, options[0]);
-
+                        String op = (String) JOptionPane.showInputDialog(null,"Choose your option for receiving data from server " ,"Options",JOptionPane.QUESTION_MESSAGE,icon , options, options[0]);
 
                         if (op == "Global ranking") {
                             Object[] stageSelection = {"0", "1", "3", "5", "9", "11", "13", "16", "19", "20", "23"};
@@ -717,11 +716,9 @@ public class MyGameGUI extends JPanel {
                      JSONObject autoGameScore = getAutoGameScore.getJSONObject("GameServer");
                      gameScore = autoGameScore.getInt("grade");
 
-                     int to_sleep = 50;
+                     int to_sleep = 105;
                      try {
-                         if (scenario == 0 || scenario == 3 || scenario == 1);
-                             to_sleep =+105;
-                         if (scenario == 5) to_sleep += 20;
+                         if (scenario == 5) to_sleep = 125;
                          if (scenario == 13) to_sleep = 99;
                          if (scenario == 16 ) to_sleep = 102;
                          if (scenario == 20) to_sleep = 102;
@@ -748,8 +745,9 @@ public class MyGameGUI extends JPanel {
             if (n == JOptionPane.YES_OPTION){
                 log.closeDocument();
                 this.setVisible(false);
-                String remark = "data/" +this.scenario;
+                String remark = "data/" +this.scenario +".kml";
                 myGame.sendKML(remark);
+
                 System.exit(0);
             }
             else {
@@ -758,6 +756,7 @@ public class MyGameGUI extends JPanel {
             }
 
         });
+
 
     }
 

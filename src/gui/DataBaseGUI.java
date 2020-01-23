@@ -43,6 +43,7 @@ public class DataBaseGUI extends JFrame implements ActionListener  {
      */
 	private void InitGui(){
         this.setSize(600, 800); // set the size of the window according the existing graph
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         if (fromGame) {
           //  this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
