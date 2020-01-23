@@ -1,4 +1,6 @@
 	package gameClient;
+	import utils.Range;
+
 	import java.sql.Connection;
 	import java.sql.DriverManager;
 	import java.sql.ResultSet;
@@ -16,6 +18,7 @@ public class SimpleDB {
 	public static final String jdbcUrl = "jdbc:mysql://db-mysql-ams3-67328-do-user-4468260-0.db.ondigitalocean.com:25060/oop?useUnicode=yes&characterEncoding=UTF-8&useSSL=false";
 	public static final String jdbcUser = "student";
 	public static final String jdbcUserPassword = "OOP2020student";
+	private int howMuch;
 	/**
 	 * simply prints all the games as played by the users (in the database).
 	 */
@@ -172,11 +175,15 @@ public class SimpleDB {
 		return noDuplList;
 	}
 
-	public static int Ranking(ArrayList<Student> ranking, int id1) {
-		for (Student stu : ranking)
+	public static Range Ranking(ArrayList<Student> ranking, int id1) {
+		int my_rank = 0;
+		int all_users = 0;
+		for (Student stu : ranking) {
 			if (stu.getID() == id1)
-				return ranking.indexOf(stu) + 1;
-			return -1;
+				my_rank = ranking.indexOf(stu) + 1;
+			all_users++;
+		}
+		return new Range(my_rank , all_users);
 	}
 
 	public static int getNumOfGames(int ID_1) {
@@ -273,6 +280,34 @@ public class SimpleDB {
 			e.printStackTrace();
 		}
 		return maxLevel;
+	}
+
+	public static int HowMuch(int ID_1){
+		int i = 0;
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection connection = DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcUserPassword);
+			Statement statement = connection.createStatement();
+			String allCustomersQuery = "SELECT * FROM Logs;";
+			ResultSet resultSet = statement.executeQuery(allCustomersQuery);
+
+			while (resultSet.next()) {
+				int ID = resultSet.getInt("UserID");
+				if (ID == ID_1) {
+					i++;
+				}
+			}
+			resultSet.close();
+			statement.close();
+			connection.close();
+		} catch (SQLException sqle) {
+			System.out.println("SQLException: " + sqle.getMessage());
+			System.out.println("Vendor Error: " + sqle.getErrorCode());
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return i;
+
 	}
 }
 		

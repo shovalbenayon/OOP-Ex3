@@ -1,7 +1,10 @@
 package gui;
 
+import Server.Game_Server;
 import gameClient.SimpleDB;
 import gameClient.Student;
+import jdk.nashorn.internal.scripts.JO;
+import utils.Range;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,9 +15,18 @@ import java.util.ArrayList;
 public class DataBaseGUI extends JFrame implements ActionListener  {
     private JTable MainTable;
     private boolean startFlag = true;
+    private int UserID ;
     Object[][] Info;
 
 	public DataBaseGUI() {
+        String id = JOptionPane.showInputDialog("Enter your id number" );
+        try {
+            this.UserID= Integer.parseInt(id);
+            Game_Server.login(this.UserID);
+
+        } catch (Exception Ex) {
+            JOptionPane.showMessageDialog(null, "Invalid input", "Error", JOptionPane.ERROR_MESSAGE);
+        }
         InitGui();
 	}
 
@@ -23,7 +35,7 @@ public class DataBaseGUI extends JFrame implements ActionListener  {
      */
 	private void InitGui(){
         this.setSize(600, 800); // set the size of the window according the existing graph
-    //    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         MenuBar menuBar = new MenuBar();
 
@@ -40,9 +52,13 @@ public class DataBaseGUI extends JFrame implements ActionListener  {
         MenuItem myLevel = new MenuItem("My Level");
         myLevel.addActionListener(this);
 
+        MenuItem total = new MenuItem("My Totals games in the server");
+        total.addActionListener(this);
+
         File.add(ranking);
         File.add(bestOfMe);
         File.add(myLevel);
+        File.add(total);
 
         this.setVisible(true);
         this.setLocationRelativeTo(null);
@@ -66,7 +82,7 @@ public class DataBaseGUI extends JFrame implements ActionListener  {
         };
 
         this.setTitle("Data Table");
-        Info = SimpleDB.printUserLog(316150861);
+        Info = SimpleDB.printUserLog(this.UserID);
         MainTable = new JTable(Info, columns);
         this.add(new JScrollPane(MainTable));
     }
@@ -80,7 +96,8 @@ public class DataBaseGUI extends JFrame implements ActionListener  {
                     "Main menu", JOptionPane.QUESTION_MESSAGE, null, stageSelection, initialStage);
 
             ArrayList<Student> arr = SimpleDB.getRankingForLevel(Integer.parseInt((String) selectedStage));
-            JOptionPane.showMessageDialog(this, "Ranking in class for level " + selectedStage + " : " +SimpleDB.Ranking(arr,316150861));
+            Range stat =SimpleDB.Ranking(arr,this.UserID);
+            JOptionPane.showMessageDialog(this, "Ranking in class for level " + selectedStage + " : " + stat.get_min() +" from " + stat.get_max());
         }
 
 
@@ -91,12 +108,15 @@ public class DataBaseGUI extends JFrame implements ActionListener  {
             newFrame.setVisible(true);
             newFrame.setLocationRelativeTo(null);
             newFrame.setTitle("Bast Scores");
-            Info = SimpleDB.bestScores("316150861");
+            Info = SimpleDB.bestScores(String.valueOf(this.UserID));
             JTable newtable = new JTable(Info, columns);
             newFrame.add(new JScrollPane(newtable));
         }
         if (e.getActionCommand() == "My Level"){
-            JOptionPane.showMessageDialog(this, "My Max level is : " + SimpleDB.showMaxLevel("316150861"));
+            JOptionPane.showMessageDialog(this, "My Max level is : " + SimpleDB.showMaxLevel(String.valueOf(this.UserID)));
+        }
+        if (e.getActionCommand() == "My Totals games in the server"){
+            JOptionPane.showMessageDialog(this , "Your total games in the server until now : "+SimpleDB.HowMuch(this.UserID));
         }
 
     }

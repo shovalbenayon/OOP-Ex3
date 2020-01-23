@@ -72,7 +72,7 @@ public class MyGameGUI extends JPanel {
     private final int X_RANGE = 1500;
     private final int Y_RANGE = 900;
     private JButton moveButton = new JButton("Move Robot");
-    private JButton InfoServer = new JButton("Games Information");
+    private JButton InfoServer = new JButton("Data Base");
     private int UserID;
     private int min_dt;
 
@@ -114,8 +114,8 @@ public class MyGameGUI extends JPanel {
 
         String id = JOptionPane.showInputDialog("Enter your id number" );
         try {
-            int idNum = Integer.parseInt(id);
-            Game_Server.login(UserID);
+            this.UserID = Integer.parseInt(id);
+            Game_Server.login(this.UserID);
 
         } catch (Exception Ex) {
             JOptionPane.showMessageDialog(null, "Invalid input", "Error", JOptionPane.ERROR_MESSAGE);
@@ -187,15 +187,14 @@ public class MyGameGUI extends JPanel {
     }
 
     public MyGameGUI(int gameScenario)  {
-//        String id = JOptionPane.showInputDialog("Enter your id number" );
-//        try {
-//            int idNum = Integer.parseInt(id);
-//            Game_Server.login(UserID);
-//
-//        } catch (Exception Ex) {
-//            JOptionPane.showMessageDialog(null, "Invalid input", "Error", JOptionPane.ERROR_MESSAGE);
-//        }
-        Game_Server.login(316150861);
+        String id = JOptionPane.showInputDialog("Enter your id number" );
+        try {
+            this.UserID = Integer.parseInt(id);
+            Game_Server.login(this.UserID);
+
+        } catch (Exception Ex) {
+            JOptionPane.showMessageDialog(null, "Invalid input", "Error", JOptionPane.ERROR_MESSAGE);
+        }
         this.scenario = gameScenario;
         log = new KML_Logger(""+ scenario);
         JPanel mainPanel = new JPanel();
@@ -516,7 +515,7 @@ public class MyGameGUI extends JPanel {
 
         // Automatic game threads
         placeRobotsAuto = new Thread(() -> {
-            while (robotsCounter < robotsNum && scenario != 16 ) {
+            while (robotsCounter < robotsNum && scenario != 16  && scenario != 13 && scenario != 20 && scenario != 23 ) {
                 Fruit bestFruit = AutomaticGame.findBestFruit(this.FruitsCol);
                 // Choose the best location based on the greatest fruits values
                 int autoSrcNode = bestFruit.getEdge().getSrc();
@@ -530,40 +529,80 @@ public class MyGameGUI extends JPanel {
             if (scenario == 16) {
                 robotsCounter = 0;
                 while (robotsCounter < robotsNum) {
-                    Fruit bestFruit = AutomaticGame.findBestFruit(this.FruitsCol);
+                    if (robotsCounter != 0) {
+                        Fruit bestFruit = AutomaticGame.findBestFruit(this.FruitsCol);
 
-                    // Choose the best location based on the greatest fruits values
-                    int autoSrcNode = bestFruit.getEdge().getSrc();
-                    myGame.addRobot(autoSrcNode);
-                    FruitsCol = AutomaticGame.removeBest(FruitsCol, bestFruit);
-                    bestFruit = AutomaticGame.findBestFruit(this.FruitsCol);
-                    FruitsCol = AutomaticGame.removeBest(FruitsCol, bestFruit);
+                        // Choose the best location based on the greatest fruits values
+                        int autoSrcNode = bestFruit.getEdge().getSrc();
+                        myGame.addRobot(autoSrcNode);
+                        FruitsCol = AutomaticGame.removeBest(FruitsCol, bestFruit);
+                    }
+
+                    if (robotsCounter == 0){
+                        myGame.addRobot(5);
+                    }
 
                     repaint();
                     robotsCounter++;
                 }
             }
-//            if (scenario == 23) {
-//                robotsCounter = 0;
-//                while (robotsCounter < robotsNum) {
-//                    AutomaticGame.getGameFruits(FruitsCol , dGraph , myGame);
-//                    Fruit bestFruit = AutomaticGame.findBestFruit(FruitsCol);
-//
-//                    // Choose the best location
-//                    int autoSrcNode = bestFruit.getEdge().getSrc();
-//                    myGame.addRobot(autoSrcNode);
-//                    FruitsCol = AutomaticGame.removeBest(FruitsCol, bestFruit);
-//
-////                    if (robotsCounter == 0) {
-////                        bestFruit = AutomaticGame.findBestFruit(FruitsCol);
-////                        FruitsCol = AutomaticGame.removeBest(FruitsCol, bestFruit);
-////                    }
-//
-//                    repaint();
-//                    robotsCounter++;
-//                }
-           // }
+            if (scenario == 13) {
+                robotsCounter = 0;
+                while (robotsCounter < robotsNum) {
+                    if (robotsCounter != 1) {
+                        Fruit bestFruit = AutomaticGame.findBestFruit(this.FruitsCol);
 
+                        // Choose the best location based on the greatest fruits values
+                        int autoSrcNode = bestFruit.getEdge().getSrc();
+                        myGame.addRobot(autoSrcNode);
+                        FruitsCol = AutomaticGame.removeBest(FruitsCol, bestFruit);
+                    }
+
+                    if (robotsCounter == 1){
+                        myGame.addRobot(13);
+                    }
+
+                    repaint();
+                    robotsCounter++;
+                }
+            }
+            if (scenario == 20) {
+                robotsCounter = 0;
+                while (robotsCounter < robotsNum) {
+                    if (robotsCounter != 1) {
+                        Fruit bestFruit = AutomaticGame.findBestFruit(this.FruitsCol);
+
+                        // Choose the best location based on the greatest fruits values
+                        int autoSrcNode = bestFruit.getEdge().getSrc();
+                        myGame.addRobot(autoSrcNode);
+                        FruitsCol = AutomaticGame.removeBest(FruitsCol, bestFruit);
+                    }
+
+                    if (robotsCounter == 1){
+                        myGame.addRobot(6);
+                    }
+
+                    repaint();
+                    robotsCounter++;
+                }
+            }
+            if (scenario == 23) {
+                robotsCounter = 0;
+                while (robotsCounter < robotsNum) {
+                    if (robotsCounter == 1){
+                        myGame.addRobot(3); // 3
+                    }
+                    if (robotsCounter == 0){
+                        myGame.addRobot(19); // 3
+                    }
+                    if (robotsCounter == 2){
+                        myGame.addRobot(40); // 3
+                    }
+
+                    repaint();
+                    robotsCounter++;
+                }
+            }
             myGame.startGame();
             moveRobotAuto.start();
         });
@@ -586,10 +625,10 @@ public class MyGameGUI extends JPanel {
                          if (scenario == 0 || scenario == 3 || scenario == 1);
                              to_sleep =+105;
                          if (scenario == 5) to_sleep += 20;
-                         if (scenario == 13) to_sleep = 125;
-                         if (scenario == 16 ) to_sleep = 100;
-                         if (scenario == 20) to_sleep = 103;
-                         if (scenario == 23 ) to_sleep = 51; 
+                         if (scenario == 13) to_sleep = 99;
+                         if (scenario == 16 ) to_sleep = 102;
+                         if (scenario == 20) to_sleep = 102;
+                         if (scenario == 23 ) to_sleep = 51;
 
                          Thread.sleep(to_sleep);
                          AutomaticGame.moveRobots(myGame , FruitsCol);

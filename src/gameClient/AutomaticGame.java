@@ -92,7 +92,8 @@ public class AutomaticGame {
                         List<node_data> nodesPath = graph_algo.shortestPath(src, nextEdge.getSrc());
                         if (nodesPath == null) {
                             game.chooseNextEdge(robotID, nextEdge.getDest());
-                        } else {
+                        }
+                        else {
                             for (node_data n : nodesPath) {
                                 dest = n.getKey();
                                 game.chooseNextEdge(robotID, dest);
